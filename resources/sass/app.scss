@@ -1,0 +1,299 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap");
+// Variables
+@import 'variables';
+
+//fix error 404 on nginx - иначе шрифты на VPS не грузятся
+//$fa-font-path =  "font" или "/build/fonts";
+$fa-font-path: $fontsAwesomePath;
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/brands";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+
+//jquery ui
+//@import '~jquery-ui/themes/base/all.css';
+//@import 'vuetify/styles'
+//@import '~vuetify/dist/vuetify.min.css';
+
+#app {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    min-width: 370px;
+}
+
+.navbar {
+  background-color: #28aaff;
+  padding: 0.35rem 1rem;
+}
+
+body {
+  font-family: 'Montserrat', Arial, sans-serif;
+  display: flex;
+  min-height: 100vh;
+  min-width: 270px;
+  flex-direction: column;
+  background-color: #f0f0f0;
+
+    //footer {
+    //    display: none;
+    //    @media (min-width: 768px) {
+    //        display: block;
+    //    }
+    //}
+}
+
+.hide-class {
+    display: none;
+    //@media (min-width: 768px) {
+    //    display: block;
+    //}
+}
+
+.app-content {
+    padding-bottom: 65px;
+    padding-top: 20px;
+    //@media (min-width: 768px) {
+    //    padding-bottom: 0;
+    //}
+    flex: 1;
+    //background-color: #f0f0f0;
+
+  //@include media-breakpoint-down(sm) {
+  //    background-color: #edeef0;
+  //}
+}
+
+ul.pagination {
+    .page-link {
+        @include media-breakpoint-down(sm) {
+            padding: 0.4rem 0.5rem;
+            font-size: 12px;
+        }
+
+    }
+}
+
+.table th, .table td {
+  padding: 0.55rem 0.75rem;
+    @include media-breakpoint-down(sm) {
+        padding: 0.5rem 0.3rem;
+    }
+}
+
+ul.nav {
+    @include media-breakpoint-down(sm) {
+        font-size: 13px;
+    }
+}
+
+.breadcrumb {
+  background: none;
+  padding: 0;
+    @include media-breakpoint-down(sm) {
+        font-size: 12px;
+    }
+}
+
+.nav-item.active>.nav-link, .navbar.navbar-dark .navbar-nav .nav-item.active>.nav-link {
+  background-color: rgba(255,255,255,.1);
+}
+
+.nav-link {
+  display: block;
+  padding: .35rem 1rem;
+}
+table#table-transition-example .flip-list-move {
+  transition: transform 1s;
+}
+.nav-pills a {
+  font-size: 13px;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  background-color: #42b983;
+}
+
+.nav-link {
+  padding: 0.2rem 0.73rem;
+
+}
+
+.nav-pills .nav-link.red {
+  background-color: #f0ad4e;
+  color: #4c1010;
+}
+
+.card-body p:last-child {
+  margin-bottom: 0;
+}
+
+
+.currencies {
+  .card-body {
+    min-height: 50vh;
+  }
+}
+
+
+.nav-item.active>.nav-link, .navbar.navbar-dark .navbar-nav .nav-item.active>.nav-link {
+  background-color: rgba(255,255,255,.1);
+}
+
+.waves-effect {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-link {
+  display: block;
+  padding: .35rem 1rem;
+}
+
+.navbar-jira {
+  background-color: #495057;
+  padding: .5rem 1rem;
+}
+
+//стриница операторов Jira
+.operators {
+  .h5 {
+    margin: 20px 0px 10px 0px;
+  }
+
+  .line1 {
+    counter-reset: counter1;
+  }
+
+  .line2 {
+    counter-reset: counter2;
+  }
+
+  .line1 th[scope='row']::before {
+    counter-increment: counter1;
+    content: counter(counter1);
+  }
+
+  .line2 th[scope='row']::before {
+    counter-increment: counter2;
+    content: counter(counter2);
+  }
+
+  .line1 tr td:nth-child(3), .line2 tr td:nth-child(3) {
+    width: 200px;
+  }
+}
+.chartjs {
+  //padding-top: 20px;
+}
+
+.chartjs table {
+  border: 2px solid #42b983;
+  border-radius: 3px;
+  background-color: #fff;
+  border-collapse: separate;
+  border-spacing: 2px;
+
+  th {
+    background-color: #42b983;
+    color: #fff;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -user-select: none;
+    font-family: Lato, sans-serif !important;
+    font-size: 12px !important;
+    word-break: break-word;
+    font-weight: bold !important;
+  }
+
+  td {
+    background-color: #f9f9f9;
+    color: #666;
+  }
+
+  th,
+  td {
+    min-width: 120px;
+    padding: 7px 20px;
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+  }
+}
+
+table#table-transition-example .flip-list-move {
+  transition: transform 1s;
+}
+.nav-pills a {
+  font-size: 13px;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  background-color: #42b983;
+}
+
+.nav-link {
+  padding: 0.2rem 0.4rem;
+
+}
+
+.nav-pills .nav-link.red {
+  background-color: #f0ad4e;
+  color: #4c1010;
+}
+
+.vue-menu .nav-link.active {
+  color: #495057;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.table-image {
+    td, th {
+        vertical-align: middle;
+    }
+}
+
+
+.categories-table {
+    @include media-breakpoint-down(sm) {
+        font-size: 11px;
+        td a {
+            font-size: 14px;
+        }
+    }
+}
+
+.alert {
+    @include media-breakpoint-down(sm) {
+        padding-left: 0;
+        padding-right: 0;
+        ul {
+            padding-left: 27px;
+            padding-right: 20px;
+        }
+    }
+}
+
+.form-control.is-invalid {
+    @include media-breakpoint-down(sm) {
+        background-image: none;
+        padding-right: 7px !important;
+    }
+    &::-webkit-search-cancel-button {
+        margin-left: 10px;
+    }
+}
