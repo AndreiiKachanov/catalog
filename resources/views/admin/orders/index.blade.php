@@ -52,10 +52,6 @@
             height: auto;
         }
 
-        /*table.bottom tr td:nth-child(2) {*/
-        /*    text-align: left;*/
-        /*}*/
-
         tr.all_sum td:first-child {
             padding-left: 23px;
         }
@@ -146,7 +142,6 @@
         <tr>
             <th scope="col">№ заказа</th>
             <th scope="col">Дата заказа</th>
-            {{--            <th scope="col">Кол-во</th>--}}
             <th scope="col">Сумма заказа (₽)</th>
             <th scope="col">Имя</th>
             <th scope="col">№ телефона</th>

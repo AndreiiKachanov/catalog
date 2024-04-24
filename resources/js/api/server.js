@@ -1,26 +1,36 @@
 export async function makeRequest(url) {
-    let response = await fetch(url);
-    let data = await response.json();
-    return data;
+    try {
+        const response = await fetch(url);
+        return await response.json();
+    } catch (error) {
+        throw new Error('Произошла ошибка при отправке запроса: ' + error.message);
+    }
 }
-
 
 export async function makeRequestPost(url) {
-    let options = {
+    const options = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        headers: {'Content-Type': 'application/json'}
     };
-    let response = await fetch(url, options);
-    let data = await response.json();
-    return data;
+    try {
+        const response = await fetch(url, options);
+        return await response.json();
+    } catch (error) {
+        throw new Error('Произошла ошибка при отправке запроса: ' + error.message);
+    }
 }
+
 export async function makeRequestPostJson(url, json) {
-    let options = {
+    const options = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(json)
     };
-    let response = await fetch(url, options);
-    let data = await response.json();
-    return data;
+
+    try {
+        const response = await fetch(url, options);
+        return await response.json();
+    } catch (error) {
+        throw new Error('Произошла ошибка при отправке запроса: ' + error.message);
+    }
 }

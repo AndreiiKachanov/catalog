@@ -10,6 +10,8 @@ use Illuminate\Database\Seeder;
 
 class InvoicesSeeder extends Seeder
 {
+    private ApiService $service;
+
     public function __construct(ApiService $service)
     {
         $this->service = $service;
@@ -19,7 +21,7 @@ class InvoicesSeeder extends Seeder
      * @return void
      * @throws Exception
      */
-    public function run()
+    public function run(): void
     {
         if (Invoice::count() != 0) {
             throw new Exception(Invoice::getTableName() . ' table is not empty. Stop all seeds!!!');

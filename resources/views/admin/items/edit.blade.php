@@ -63,7 +63,7 @@
 
         <div class="form-group">
             {{ Form::label('price', 'Цена закупки (₽)*', ['class' => 'col-form-label']) }}
-            {{ Form::number('price', old('price', $item->price), ['class' => 'form-control' . setIsValidField('price', $errors), 'required' => true]) }}
+            {{ Form::number('price', old('price', $item->getRawOriginal('price')), ['class' => 'form-control' . setIsValidField('price', $errors), 'required' => true]) }}
             @if ($errors->has('price'))
                 <span class="invalid-feedback">{!! $errors->first('price') !!}</span>
             @endif

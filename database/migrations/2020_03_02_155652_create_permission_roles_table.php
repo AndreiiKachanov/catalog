@@ -9,9 +9,9 @@ use App\Models\User\PermissionRoles;
 
 class CreatePermissionRolesTable extends Migration
 {
-    private $permissionRolesTableName;
-    private $permissionsTableName;
-    private $rolesTableName;
+    private string $permissionRolesTableName;
+    private string $permissionsTableName;
+    private string $rolesTableName;
 
     public function __construct()
     {
@@ -25,7 +25,7 @@ class CreatePermissionRolesTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         if (!Schema::hasTable($this->permissionRolesTableName)) {
             Schema::create($this->permissionRolesTableName, function (Blueprint $table) {
@@ -62,7 +62,7 @@ class CreatePermissionRolesTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists($this->permissionRolesTableName);
     }

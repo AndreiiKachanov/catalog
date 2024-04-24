@@ -11,7 +11,8 @@
                             :custom="true"
                         >
                             <a :href="route.fullPath" @click="navigate" class="item fruit">
-                                <img :src="`${product.img}`" class="img-thumbnail" :alt="`${product.title}`" :title="`${product.title}`">
+                                <img :src="`${product.img}`" class="img-thumbnail" :alt="`${product.title}`"
+                                     :title="`${product.title}`">
                             </a>
                         </router-link>
                     </div>
@@ -29,7 +30,8 @@
                                 </router-link>
                             </div>
                             <div class="col-12 pl-0 pr-0 mb-1">
-                                <p v-if="!minOrderAmount && product.min_order_amount">Мин. заказ <strong>{{ product.min_order_amount }}</strong> шт.</p>
+                                <p v-if="!minOrderAmount && product.min_order_amount">Мин. заказ
+                                    <strong>{{ product.min_order_amount }}</strong> шт.</p>
                             </div>
                             <div class="col-12">
                                 <div class="row align-items-center">
@@ -49,7 +51,7 @@
                                         <count-items
                                             :has-min-order="orderQuantityBelowMinimum(product)"
                                             :count-from-cart="getCountFromCart(product.id)"
-                                            @set-cnt="setNewCnt2(product.id, $event)"
+                                            @set-cnt="setNewCnt(product.id, $event)"
                                         >
                                         </count-items>
                                     </div>
@@ -63,7 +65,8 @@
                                 <div class="row" style="margin-top: -6px;">
                                     <div class="col-3 col-sm-5"></div>
                                     <div class="min-parent col-7 col-sm-5 d-flex justify-content-center pl-0 pr-0">
-                                        <div v-if="checkMinOrderEvery(product.cnt, product.min_order_amount)" class="min text-center">
+                                        <div v-if="checkMinOrderEvery(product.cnt, product.min_order_amount)"
+                                             class="min text-center">
                                             Мин. заказ <strong>{{ product.min_order_amount }}</strong> шт.
                                         </div>
                                     </div>
@@ -77,7 +80,8 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <p v-if="isClickCheckout && minOrderAmount !== null && totalCost < minOrderAmount" class="text-center mb-0" style="font-size: 17px; color: red;">
+                <p v-if="isClickCheckout && minOrderAmount !== null && totalCost < minOrderAmount"
+                   class="text-center mb-0" style="font-size: 17px; color: red;">
                     Минимальный заказ {{ minOrderAmount }} ₽
                 </p>
             </div>
@@ -86,7 +90,8 @@
                     v-if="cartCnt"
                     :to="{ name: 'checkout' }"
                 >
-                    <span class="btn btn-sm btn-success" @click.prevent="checkBeforeLeave">Оформить - <strong>{{ cartTotal }} ₽</strong></span>
+                    <span class="btn btn-sm btn-success"
+                          @click.prevent="checkBeforeLeave">Оформить - <strong>{{ cartTotal }} ₽</strong></span>
                 </router-link>
             </div>
         </div>
@@ -96,163 +101,139 @@
 </template>
 
 <script>
-    import {mapGetters, mapActions} from "vuex";
-    import CountItems from "../components/CountItems.vue";
-    import AppE404 from '../components/E404';
-    import test from "./Test.vue";
+import {mapGetters, mapActions} from 'vuex';
+import CountItems from '../components/CountItems.vue';
+import AppE404 from '../components/E404';
 
-    export default {
-        name: "Cart",
-        data: () => ({
-            isClickCheckout: false
+export default {
+    name: 'Cart',
+    data: () => ({
+        isClickCheckout: false
+    }),
+    components: {
+        CountItems,
+        AppE404
+    },
+    computed: {
+        ...mapGetters('cart', {
+            products: 'productsDetailed',
+            cartTotal: 'total',
+            cartCnt: 'length',
+            all: 'all',
+            inCart: 'has',
+            getCountFromCart: 'getCountFromCart'
         }),
-        components: {
-            CountItems,
-            AppE404
+        ...mapGetters('settings', {
+            minOrderAmount: 'minOrderAmount'
+        }),
+        ...mapGetters('order', {
+            isValidShoppingCart: 'isValidShoppingCart'
+        }),
+        hasProductsInCart() {
+            return this.cartCnt > 0;
         },
-        computed: {
-            ...mapGetters('cart', {
-                products: 'productsDetailed',
-                cartTotal: 'total',
-                cartCnt: 'length',
-                all: 'all',
-                inCart: 'has',
-                getCountFromCart: 'getCountFromCart'
-            }),
-            ...mapGetters('settings', {
-                minOrderAmount: 'minOrderAmount'
-            }),
-            ...mapGetters('order', {
-                isValidShoppingCart: 'isValidShoppingCart'
-            }),
-            hasProductsInCart() {
-                return this.cartCnt > 0;
-            },
-            totalCost() {
-                let totalCost = 0;
-                for (let i = 0; i < this.products.length; i++) {
-                    totalCost += this.products[i].cnt * this.products[i].price;
-                }
-                return totalCost;
-            },
-            // Определяем, что выбрано больше или столько же товаров, как в админке
-            isMoreSelectedThanAdmin() {
-                // console.log('короткая функция every', this.products.every(item => item.cnt >= item.min_order_amount));
-                return this.products.every(item => item.cnt >= item.min_order_amount);
-            },
-            isMinOrder(){
-                return false;
+        totalCost() {
+            let totalCost = 0;
+            for (let i = 0; i < this.products.length; i++) {
+                totalCost += this.products[i].cnt * this.products[i].price;
+            }
+            return totalCost;
+        },
+        // Определяем, что выбрано больше или столько же товаров, как в админке
+        isMoreSelectedThanAdmin() {
+            return this.products.every(item => item.cnt >= item.min_order_amount);
+        }
+    },
+    methods: {
+        ...mapActions('cart', ['setCnt', 'remove']),
+        ...mapActions('order', ['setIsValidShoppingCart']),
+        setNewCnt(id, cnt) {
+            if (cnt <= 0) {
+                return;
             }
 
+            if (this.inCart(id)) {
+                this.setCnt({id, cnt});
+                return;
+            }
+
+            this.setTempCnt({id, cnt});
         },
-        methods: {
-            ...mapActions('cart', ['setCnt', 'remove']),
-            ...mapActions('order', ['setIsValidShoppingCart']),
-            setNewCnt({id, cnt}) {
-                // console.log('id=', id);
-                if (this.inCart(id)) {
-                    // console.log('В корзине есть такой товар');
-                    // console.log('id =' + id, 'cnt=' + cnt);
-                    if (cnt > 0) {
-                        this.setCnt({id, cnt})
-                    } else {
-                        // console.log('cnt < 0, ничего не делаем');
-                    }
-                }
-                else {
-                    // console.log('В корзине нет такого товара');
-                }
-            },
-            setNewCnt2(id, cnt) {
-                // console.log(1);
-                // console.log(arguments)
-                if (this.inCart(id)) {
+        checkMinOrderEvery(cnt, minOrderAmountInCart) {
+            // если нажата кнопка Оформить и кол-во выбранных товаров меньше чем в админке в товарах
+            return this.isClickCheckout && this.minOrderAmount === null && cnt < minOrderAmountInCart;
+        },
+        checkBeforeLeave() {
+            // Устанавливаем, что кнопка 'Оформить' нажата
+            // if (!this.isClickCheckout) {
+            //     this.isClickCheckout = true;
+            // }
+            // то же самое, как и сверху
+            // Этот оператор присваивает true переменной this.isClickCheckout, только если она имеет значение false или undefined.
+            // В противном случае она остается без изменений.
+            this.isClickCheckout ||= true;
+            const minOrderAmount = this.minOrderAmount;
 
+            // Если мин. сумма не указана в админке
+            if (minOrderAmount === null) {
+                if (this.isMoreSelectedThanAdmin) {
+                    this.setIsValidShoppingCart(true);
+                    return this.$router.push({name: 'checkout'});
+                }
 
-                    this.setCnt({id, cnt})
-                    // if (cnt > 0 && cnt < 65536) {
-                    //     this.setCnt({id, cnt})
-                    // } else {
-                        // console.log('cnt < 0, ничего не делаем');
-                    // }
-                }
-                else {
-                    // console.log('В корзине нет такого товара');
-                    // console.log('cnt = ' + cnt);
-                    if (cnt > 0) {
-                        // console.log(1);
-                        this.setTempCnt({id, cnt})
-                    }
-                }
-            },
-            checkMinOrderEvery(cnt, minOrderAmountInCart) {
-                // если нажата кнопка и кол-во выбранных меньше чем в админке в товарах
-                return this.isClickCheckout && this.minOrderAmount === null && cnt < minOrderAmountInCart;
-            },
-            checkBeforeLeave() {
-                // Устанавливаем, что кнопка 'Оформить' нажата
-                // if (!this.isClickCheckout) {
-                //     this.isClickCheckout = true;
-                // }
-                // то же самое, как и сверху
-                // Этот оператор присваивает true переменной this.isClickCheckout, только если она имеет значение false или undefined. В противном случае она остается без изменений.
-                this.isClickCheckout ||= true;
-                const minOrderAmount = this.minOrderAmount;
-                // Если мин. сумма не указана в админке
-                if (minOrderAmount === null) {
-                    if (this.isMoreSelectedThanAdmin) {
-                        this.setIsValidShoppingCart(true);
-                        return this.$router.push({ name: 'checkout' });
-                    }
-                } else {
-                    // Иначе если мин. сумма указана
-                    if (this.totalCost >= minOrderAmount) {
-                        this.setIsValidShoppingCart(true);
-                        return this.$router.push({ name: 'checkout' });
-                    }
-                }
-                this.setIsValidShoppingCart(false);
-            },
-            orderQuantityBelowMinimum(product) {
-                return !this.minOrderAmount && this.isClickCheckout && product.min_order_amount > product.cnt;
-            },
-        }
+                return;
+            }
+
+            // Иначе если мин. сумма указана
+            if (this.totalCost >= minOrderAmount) {
+                this.setIsValidShoppingCart(true);
+                return this.$router.push({name: 'checkout'});
+            }
+
+            this.setIsValidShoppingCart(false);
+        },
+        orderQuantityBelowMinimum(product) {
+            return !this.minOrderAmount && this.isClickCheckout && product.min_order_amount > product.cnt;
+        },
     }
+}
 </script>
 
 <style lang="scss">
-    .main-row {
-        border-bottom: 1px solid #eeeeee;
-        padding-top: 15px;
-        padding-bottom: 15px;
-        &:first-child {
-            padding-top: 0;
-        }
+.main-row {
+    border-bottom: 1px solid #eeeeee;
+    padding-top: 15px;
+    padding-bottom: 15px;
 
-        .cart-items {
-            @include media-breakpoint-down(xs) {
-                span.input-group-prepend, span.input-group-append, input[type='text'] {
-                    button {
-                        padding: 0.25rem 0.35rem
-                    }
-                }
-                input[type='text'] {
-                    padding-left: 0;
-                    padding-right: 0;
+    &:first-child {
+        padding-top: 0;
+    }
+
+    .cart-items {
+        @include media-breakpoint-down(xs) {
+            span.input-group-prepend, span.input-group-append, input[type='text'] {
+                button {
+                    padding: 0.25rem 0.35rem
                 }
             }
-        }
-
-        .min-parent {
-            @include media-breakpoint-down(xs) {
-                margin-left: 20px;
-            }
-            .min {
-                color: red;
-                @include media-breakpoint-down(xs) {
-                    font-size: 0.8rem;
-                }
+            input[type='text'] {
+                padding-left: 0;
+                padding-right: 0;
             }
         }
     }
+
+    .min-parent {
+        @include media-breakpoint-down(xs) {
+            margin-left: 20px;
+        }
+
+        .min {
+            color: red;
+            @include media-breakpoint-down(xs) {
+                font-size: 0.8rem;
+            }
+        }
+    }
+}
 </style>

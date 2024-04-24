@@ -60,7 +60,6 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
     'site_short' => env('SITE_SHORT', 'localhost'),
-    'price_increase' => env('PRICE_INCREASE', 1),
     'asset_url' => env('ASSET_URL'),
 
     /*

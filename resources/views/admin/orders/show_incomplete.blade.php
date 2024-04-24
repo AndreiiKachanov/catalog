@@ -49,10 +49,6 @@
             height: auto;
         }
 
-        /*.img-fluid {*/
-        /*    max-width: 100%;*/
-        /*    height: auto;*/
-        /*}*/
         img {
             vertical-align: middle;
             border-style: none;
@@ -131,10 +127,6 @@
             }
 
             table.bottom td::before {
-                /*
-                * aria-label has no advantage, it won't be read inside a table
-                content: attr(aria-label);
-                */
                 content: attr(data-label);
                 float: left;
                 font-weight: bold;
@@ -205,55 +197,54 @@
             <tbody>
             @foreach ($token->cartItems as $cartItem)
                 <tr>
-{{--                    @if($cartItem->item)--}}
-                        <td data-label="Дата изменения">
-                            {{ date_format($cartItem->updated_at, 'd.m.Y H:i:s') }}
-                        </td>
-                        <td data-label="Фото">
-                            @if($cartItem->item->deleted_at)
+                    <td data-label="Дата изменения">
+                        {{ date_format($cartItem->updated_at, 'd.m.Y H:i:s') }}
+                    </td>
+                    <td data-label="Фото">
+                        @if($cartItem->item->deleted_at)
+                            <img
+                                src="{{ Storage::disk('uploads')->url($cartItem->item->img) }}"
+                                class="img-thumbnail"
+                                alt="{{ $cartItem->item->title }}"
+                            >
+                        @else
+                            <a href="{{ route('admin.items.show', $cartItem->item) }}">
                                 <img
                                     src="{{ Storage::disk('uploads')->url($cartItem->item->img) }}"
                                     class="img-thumbnail"
                                     alt="{{ $cartItem->item->title }}"
                                 >
-                            @else
-                                <a href="{{ route('admin.items.show', $cartItem->item) }}">
-                                    <img
-                                        src="{{ Storage::disk('uploads')->url($cartItem->item->img) }}"
-                                        class="img-thumbnail"
-                                        alt="{{ $cartItem->item->title }}"
-                                    >
-                                </a>
-                            @endif
-                        </td>
-                        <td data-label="Название">
-                            @if($cartItem->item->deleted_at)
-                                <p style="color: red;">{{ $cartItem->item->title }} (удален {{ $cartItem->item->deleted_at->format('d.m.Y') }})</p>
-                            @else
-                                <a href="{{ route('admin.items.show', $cartItem->item) }}">{{ $cartItem->item->title }}</a>
-                            @endif
-                        </td>
-                        <td data-label="Артикул">
-                            {{ $cartItem->item->article_number }}
-                        </td>
-                        <td data-label="Цена">
-                            {{ $cartItem->item->price }} ₽
-                        </td>
-                        <td data-label="Кол-во">
-                            {{ $cartItem->cnt }}
-                        </td>
-                        <td data-label="Сумма">{{ number_format($cartItem->item->price * $cartItem->cnt, 0, ',', ' ') }}
-                            ₽
-                        </td>
-                        <td data-label="Категория">
-                            @if($cartItem->item->category->deleted_at)
-                                <span style="color: red;">{{ $cartItem->item->category->title }} (удалена {{ $cartItem->item->category->deleted_at->format('d.m.Y') }})</span>
-                            @else
-                                <a href="{{ route('admin.categories.show', $cartItem->item->category) }}">
-                                    {{ $cartItem->item->category->title }}
-                                </a>
-                            @endif
-                        </td>
+                            </a>
+                        @endif
+                    </td>
+                    <td data-label="Название">
+                        @if($cartItem->item->deleted_at)
+                            <p style="color: red;">{{ $cartItem->item->title }} (удален {{ $cartItem->item->deleted_at->format('d.m.Y') }})</p>
+                        @else
+                            <a href="{{ route('admin.items.show', $cartItem->item) }}">{{ $cartItem->item->title }}</a>
+                        @endif
+                    </td>
+                    <td data-label="Артикул">
+                        {{ $cartItem->item->article_number }}
+                    </td>
+                    <td data-label="Цена">
+                        {{ $cartItem->item->price }} ₽
+                    </td>
+                    <td data-label="Кол-во">
+                        {{ $cartItem->cnt }}
+                    </td>
+                    <td data-label="Сумма">{{ number_format($cartItem->item->price * $cartItem->cnt, 0, ',', ' ') }}
+                        ₽
+                    </td>
+                    <td data-label="Категория">
+                        @if($cartItem->item->category->deleted_at)
+                            <span style="color: red;">{{ $cartItem->item->category->title }} (удалена {{ $cartItem->item->category->deleted_at->format('d.m.Y') }})</span>
+                        @else
+                            <a href="{{ route('admin.categories.show', $cartItem->item->category) }}">
+                                {{ $cartItem->item->category->title }}
+                            </a>
+                        @endif
+                    </td>
                 </tr>
             @endforeach
             <tr class="all_sum">

@@ -1,8 +1,9 @@
 <template>
-    <div style="border: 1px solid red;">
+    <div>
         <h1>{{ title }}</h1>
         <hr>
-        Start from <router-link :to="{name: 'products'}">main page</router-link>
+        Start from
+        <router-link :to="{ name: 'products' }">main page</router-link>
     </div>
 </template>
 
@@ -18,5 +19,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

@@ -15,20 +15,12 @@ class SearchItemsRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @return array
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             'search_input' => 'required|string|max:2'
         ];
-
-        //if ($this->getMethod() === 'PUT') {
-        //    $rules['img'] = 'mimes:jpg,png,jpeg,gif,svg';
-        //}
-
-        return $rules;
     }
 }

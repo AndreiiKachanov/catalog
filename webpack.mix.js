@@ -41,12 +41,9 @@ mix
     ).version();
 
 if (env === 'local') {
-    // const domain = 'larka_new.loc'; // <= EDIT THIS
     mix.browserSync({
         // logLevel: "debug",
-        // open: false,
         open: false,
-        // proxy: 'https://' + 'nginx',
         proxy: 'https://' + 'nginx',
         // proxy: 'nginx',
         // host: '192.168.0.109',

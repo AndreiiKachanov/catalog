@@ -8,8 +8,8 @@ use App\Models\Admin\Cart\Order\OrderItem;
 
 return new class extends Migration
 {
-    private $tableName;
-    private $orderTableName;
+    private string $tableName;
+    private string $orderTableName;
 
     public function __construct()
     {
@@ -21,7 +21,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             //создаем  индекс для order_id
@@ -41,7 +41,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             if (Schema::hasColumn($this->tableName, 'order_id')) {

@@ -24,10 +24,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
-
 
 /**
  * @property ApiService $service
@@ -35,7 +33,10 @@ use Illuminate\Validation\ValidationException;
  */
 class ApiController extends Controller
 {
-    private $cartTokensTableName;
+    private string $cartTokensTableName;
+    private string $itemsTableName;
+    private ApiService $service;
+    private SendOrderService $sendOrderService;
 
     /**
      * @param ApiService $service
@@ -55,6 +56,7 @@ class ApiController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws GuzzleException
      */
     public function cartLoad(Request $request)
     {
@@ -74,18 +76,16 @@ class ApiController extends Controller
             }
 
             $tokenIsNull = $oldTokenString === 'null';
-
             //Если токен есть
             if (!$tokenIsNull) {
                 $oldToken = Token::with([
                     'orderItems',
-                    'cartItems' => fn ($query /** @var CartItem $query */) => $query->select(['token_id', 'item_id as id', 'cnt'])->whereHas('item'),
+                    'cartItems' => fn($query/** @var CartItem $query */) => $query->select([
+                        'token_id',
+                        'item_id as id',
+                        'cnt'
+                    ])->whereHas('item'),
                 ])->firstWhere('token', $oldTokenString);
-
-                //$oldToken->increment('visits_count');
-
-                //DB::enableQueryLog();
-
                 //Если заказ уже выполнен - кидаем исключение, чтобы не "подсмотрели" заказ через адресную строку
                 if ($oldToken->orderItems()->count() > 0) {
                     throw new MyHttpResponseException(
@@ -93,24 +93,16 @@ class ApiController extends Controller
                         '$oldToken->order !== null && $oldToken->order->orderItems->isNotEmpty()',
                         422
                     );
-                    //dd(DB::getQueryLog(), $res);
                 }
-                //dd(DB::getQueryLog());
-                //dd($oldToken);
             }
-
             //Если $tokenIsNull === false, значит входящий токен уже существует в бд, иначе
             //сработало бы исключение MyHttpResponseException
-
-            //DB::enableQueryLog();
-
             $json = [
                 //needUpdateToken = true - значит токена нет в бд.
                 //needUpdateToken = false - значит токен есть в бд
                 'needUpdateToken' => $tokenIsNull,
                 //возвращаем массив id, cnt товаров, добавленных в корзину
                 'cart' => !$tokenIsNull
-                    //? Token::firstWhere('token', $oldTokenString)->rCartItems()->whereHas('rItem')->get()->toArray()
                     ? $oldToken->cartItems
                         ->each(fn ($item) => $item->makeHidden('token_id'))
                         ->toArray()
@@ -124,13 +116,9 @@ class ApiController extends Controller
             ];
 
             //Обновляем 'время последнего визита и кол-во посещений'
-
             $token = Token::firstWhere('token', $json['token']);
             $token->update(['last_visit' => Carbon::now()]);
             $token->increment('visits_count');
-
-            //dd(DB::getQueryLog());
-
             return response()->json($json);
         } catch (ValidationException $e) {
             throw new MyHttpResponseException($e->getMessage(), null, 422);
@@ -206,9 +194,7 @@ class ApiController extends Controller
           //Обрабатывает ошибки валидации
         } catch (ValidationException $e) {
             throw new MyHttpResponseException($e->getMessage(), null, 422);
-        }
-          //Обрабатывает ошибки связанные с бд
-        catch (QueryException $e) {
+        } catch (QueryException $e) { // Обрабатывает ошибки связанные с бд
             throw new MyHttpResponseException('Database Error. See logs', $e->getMessage(), 500);
         }
     }
@@ -240,12 +226,11 @@ class ApiController extends Controller
                 $token->order()->updateOrCreate([], [$request->get('field') => $request->get('value')])
                     ? 'true'
                     : 'false',
-                200);
-
+                200
+            );
         } catch (ValidationException $e) {
             throw new MyHttpResponseException($e->getMessage(), null, 422);
-        }
-        catch (QueryException $e) {
+        } catch (QueryException $e) {
             throw new MyHttpResponseException('Database Error. See logs', $e->getMessage(), 500);
         }
     }
@@ -269,8 +254,7 @@ class ApiController extends Controller
             return response()->json(['bill_number' => $invoice->bill_number]);
         } catch (ValidationException $e) {
             throw new MyHttpResponseException($e->getMessage(), null, 422);
-        }
-        catch (QueryException $e) {
+        } catch (QueryException $e) {
             throw new MyHttpResponseException('Database Error. See logs', $e->getMessage(), 500);
         }
     }
@@ -296,18 +280,6 @@ class ApiController extends Controller
                 'items' => 'required|array|min:1'
             ]);
 
-            //Проверка, чтобы items из таблицы carts_items соответствовали тем что пришли с фронта для заказа
-            //DB::enableQueryLog();
-
-
-            //$oldToken = Token::with([
-            //    'cartItems' => function ($query) {
-            //        /** @var CartItem $query */
-            //        $query->select('token_id', 'item_id as id', 'cnt');
-            //    },
-            //    'contact'
-            //])->firstWhere('token', $request->get('token'));
-
             $oldToken = Token::with([
                 'cartItems' => function ($query) {
                     $query->select(['id as cart_item_id', 'token_id', 'item_id as id', 'cnt', ])->whereHas('item');
@@ -315,33 +287,31 @@ class ApiController extends Controller
                 'order'
             ])->firstWhere('token', $request->get('token'));
             $dbArr = $oldToken->cartItems->toArray();
-
-            //dd(DB::getQueryLog(), $dbArr, $oldToken->contact);
             $frontArr = $request->get('items');
-            //dump($dbArr, $frontArr);
 
             if (count($dbArr) !== count($frontArr)) {
                 throw new MyHttpResponseException('Validation error', 'count($dbArr) !== count($frontArr)', 422);
-            } else {
-                foreach ($dbArr as $k => $v) {
-                    if (!($dbArr[$k]['id'] === $frontArr[$k]['id'] && $dbArr[$k]['cnt'] === $frontArr[$k]['cnt'])) {
-                        throw new MyHttpResponseException('Validation error', 'id и cnt из бд не соответствуют id и cnt с фронта', 422);
-                    }
+            }
+
+            foreach ($dbArr as $k => $v) {
+                if (!($dbArr[$k]['id'] === $frontArr[$k]['id'] && $dbArr[$k]['cnt'] === $frontArr[$k]['cnt'])) {
+                    throw new MyHttpResponseException(
+                        'Validation error',
+                        'id и cnt из бд не соответствуют id и cnt с фронта',
+                        422
+                    );
                 }
             }
 
-            //$items = array_map(fn($item) => ['item_id' => $item['id'], 'cnt' => $item['cnt']], $frontArr);
-            $items = array_map(function($item) {
+            $items = array_map(function ($item) {
                 return [
                     'item_id' => $item['id'],
                     'cnt' => $item['cnt'],
                     'cart_item_id' => $item['cart_item_id']
                 ];
             }, $dbArr);
-            //dd($dbArr, $frontArr, $items);
             $oldToken->order->orderItems()->createMany($items);
             $newToken = $this->service->generateNewToken($request);
-            //dd(DB::getQueryLog(), $dbArr);
             //Обрабатывает ошибки валидации
         } catch (ValidationException $e) {
             throw new MyHttpResponseException($e->getMessage(), null, 422);
@@ -352,8 +322,6 @@ class ApiController extends Controller
         $this->sendOrderService->sendTelegram($oldToken->order);
         $this->sendOrderService->sendEmail($oldToken->order);
 
-        //dd(DB::getQueryLog());
-
         return response()->json([
             'new_token' => $newToken,
         ]);
@@ -363,7 +331,8 @@ class ApiController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function loadOrder(Request $request) {
+    public function loadOrder(Request $request)
+    {
         try {
             $request->validate([
                 'token' => "required|size:32|exists:$this->cartTokensTableName,token"
@@ -380,8 +349,7 @@ class ApiController extends Controller
                 $e->getMessage(),
                 422
             );
-        }
-        catch (QueryException $e) {
+        } catch (QueryException $e) {
             throw new MyHttpResponseException('Database Error. See logs', $e->getMessage(), 500);
         }
     }

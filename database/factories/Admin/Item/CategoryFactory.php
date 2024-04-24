@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Admin\Item\Category>
+ * @extends Factory<Category>
  */
 class CategoryFactory extends Factory
 {
     protected $model = Category::class;
 
-    private $categories = [
+    private array $categories = [
         'Роботы-трансформеры',
         'Экологические игрушки',
         'Научные эксперименты для детей',
@@ -300,23 +300,18 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
-
         // Выберите случайное название из массива
         $randomIndex = array_rand($this->categories);
         $title = $this->categories[$randomIndex];
 
-
-        //$randomCount = random_int(2, 3);
         return [
-            //'title' => $this->faker->sentence(3),
-            //'title' => ucfirst(implode(' ', $this->faker->words($randomCount))),
             'title' => $title,
             'img' => $this->faker->loremflickr(
                 Storage::disk('uploads'),
-                'categories',
+                'toy',
                 300,
                 350,
-                'toy'
+                'categories'
             ),
             //'img' => null
         ];

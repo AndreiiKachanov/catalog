@@ -4,12 +4,12 @@ namespace App\Models\Admin\Item;
 
 use App\Models\Admin\Cart\CartItem;
 use App\Models\Admin\Cart\Order\OrderItem;
-use App\Models\Admin\Setting;
 use App\Services\SettingsService;
 use App\Traits\EloquentGetTableNameTrait;
 use Database\Factories\Admin\Item\ItemFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Carbon;
 
 /**
@@ -39,10 +38,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection<int, CartItem> $cartItems
  * @property-read int|null $cart_items_count
  * @property-read Category|null $category
- * @property-read Collection<int, OrderItem> $orderItems
  * @property-read int|null $order_items_count
  * @method static ItemFactory factory($count = null, $state = [])
  * @method static Builder|Item findSimilarSlugs(string $attribute, array $config, string $slug)
@@ -68,8 +65,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Item withTrashed()
  * @method static Builder|Item withUniqueSlugConstraints(Model $model, string $attribute, array $config, string $slug)
  * @method static Builder|Item withoutTrashed()
- * @property-read Collection<int, CartItem> $cartItems
- * @property-read Collection<int, OrderItem> $orderItems
  * @property-read Collection<int, CartItem> $cartItems
  * @property-read Collection<int, OrderItem> $orderItems
  * @mixin Eloquent
@@ -133,8 +128,8 @@ class Item extends Model
         return Attribute::make(
             get: function ($value) {
                 $priceIncrease = SettingsService::getPriceIncrease();
-                $result = round( ($value / 100) * $priceIncrease + $value);
-                return $result;
+                $price = ($value / 100) * $priceIncrease + $value;
+                return round($price); // Округляем до целого числа
             }
         );
     }

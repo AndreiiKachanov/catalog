@@ -6,7 +6,15 @@
 
 @if (session('success'))
     <div class="alert alert-success">
-        {{ session('success') }}
+        @if(is_array(session('success')))
+            <ul style="margin-bottom: 0">
+                @foreach (session('success') as $succ)
+                    <li>{!! $succ !!}</li>
+                @endforeach
+            </ul>
+        @else
+            {{ session('success') }}
+        @endif
     </div>
 @endif
 

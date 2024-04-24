@@ -1,16 +1,13 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {createRouter, createWebHistory} from 'vue-router';
 
-import MainPage from "../views/MainPage.vue";
-
+import MainPage from '../views/MainPage.vue';
 import Cart from '../views/Cart';
 import Contacts from '../views/Contacts';
-
 import Checkout from '../views/Checkout';
-
-import Product from "../views/Product";
+import Product from '../views/Product';
+import CategoryPage from '../views/CategoryPage.vue';
+import Search from '../views/Search.vue';
 import E404 from '../views/E404';
-import CategoryPage from "../views/CategoryPage.vue";
-import Search from "../views/Search.vue";
 
 // массив, который описывает пути доступные на нашем сайте
 let routes = [
@@ -49,11 +46,6 @@ let routes = [
         path: '/product/:slug',
         component: Product
     },
-    // {
-    //     name: 'products-item',
-    //     path: '/:slug',
-    //     component: Product
-    // },
     {
         name: 'E404',
         path: '/:pathMatch(.*)',
@@ -64,6 +56,4 @@ let routes = [
 export default createRouter({
     routes,
     history: createWebHistory('/')
-    // history: createWebHistory()
-
 });

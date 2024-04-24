@@ -5,11 +5,16 @@ namespace App\Models\Admin\Cart;
 use App\Models\Admin\Cart\Order\Order;
 use App\Models\Admin\Cart\Order\OrderItem;
 use App\Traits\EloquentGetTableNameTrait;
+use Database\Factories\Admin\Cart\TokenFactory;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Admin\Cart\Token
@@ -17,21 +22,21 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $id
  * @property string $token
  * @property string|null $ip
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read int|null $cart_items_count
  * @property-read Order|null $contact
- * @property-read \App\Models\Admin\Cart\Invoice|null $invoice
- * @method static \Database\Factories\Admin\Cart\TokenFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|Token newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Token newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Token query()
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereIp($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereUpdatedAt($value)
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Admin\Cart\CartItem> $cartItems
+ * @property-read Invoice|null $invoice
+ * @method static TokenFactory factory($count = null, $state = [])
+ * @method static Builder|Token newModelQuery()
+ * @method static Builder|Token newQuery()
+ * @method static Builder|Token query()
+ * @method static Builder|Token whereCreatedAt($value)
+ * @method static Builder|Token whereId($value)
+ * @method static Builder|Token whereIp($value)
+ * @method static Builder|Token whereToken($value)
+ * @method static Builder|Token whereUpdatedAt($value)
+ * @property-read Collection<int, CartItem> $cartItems
  * @property string|null $browser
  * @property string|null $platform
  * @property string|null $device
@@ -40,28 +45,24 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $is_tablet
  * @property int $is_desktop
  * @property int $is_robot
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereBrowser($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereDevice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereDeviceVersion($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereIsDesktop($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereIsMobile($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereIsRobot($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereIsTablet($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Token wherePlatform($value)
+ * @method static Builder|Token whereBrowser($value)
+ * @method static Builder|Token whereDevice($value)
+ * @method static Builder|Token whereDeviceVersion($value)
+ * @method static Builder|Token whereIsDesktop($value)
+ * @method static Builder|Token whereIsMobile($value)
+ * @method static Builder|Token whereIsRobot($value)
+ * @method static Builder|Token whereIsTablet($value)
+ * @method static Builder|Token wherePlatform($value)
  * @property mixed|null $ip_info
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereIpInfo($value)
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Admin\Cart\CartItem> $cartItems
+ * @method static Builder|Token whereIpInfo($value)
  * @property-read Order|null $order
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Admin\Cart\CartItem> $cartItems
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Admin\Cart\CartItem> $cartItems
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Admin\Cart\CartItem> $cartItems
  * @property int $visits_count
- * @property \Illuminate\Support\Carbon|null $last_visit
- * @property-read \Illuminate\Database\Eloquent\Collection<int, OrderItem> $orderItems
+ * @property Carbon|null $last_visit
+ * @property-read Collection<int, OrderItem> $orderItems
  * @property-read int|null $order_items_count
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereLastVisit($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Token whereVisitsCount($value)
- * @mixin \Eloquent
+ * @method static Builder|Token whereLastVisit($value)
+ * @method static Builder|Token whereVisitsCount($value)
+ * @mixin Eloquent
  */
 class Token extends Model
 {
@@ -79,9 +80,8 @@ class Token extends Model
      * @param $value
      * @return mixed
      */
-    public function getIpInfoAttribute($value)
+    public function getIpInfoAttribute($value): mixed
     {
-        //dump($value);
         if ($value !== null) {
             return unserialize($value);
         }
@@ -112,9 +112,9 @@ class Token extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return HasManyThrough
      */
-    public function orderItems()
+    public function orderItems(): HasManyThrough
     {
         return $this->hasManyThrough(OrderItem::class, CartItem::class);
     }

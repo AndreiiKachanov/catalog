@@ -4,12 +4,10 @@ namespace Database\Factories\Admin\Cart\Order;
 
 use App\Models\Admin\Cart\Order\Order;
 use App\Models\Admin\Cart\Order\OrderItem;
-use App\Models\Admin\Cart\Token;
-use Database\Factories\Admin\Cart\TokenFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Admin\Cart\Order\Order>
+ * @extends Factory<Order>
  */
 class OrderFactory extends Factory
 {

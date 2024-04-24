@@ -42,7 +42,8 @@ class OrdersController extends Controller
      * @param Order $order
      * @return RedirectResponse
      */
-    public function destroy(Order $order) {
+    public function destroy(Order $order)
+    {
         $order->delete();
         return redirect()->route('admin.orders.index');
     }
@@ -54,7 +55,8 @@ class OrdersController extends Controller
      *
      * @return Application|Factory|View
      */
-    public function incompleteOrders() {
+    public function incompleteOrders()
+    {
         $tokens = Token::with(['cartItems.item', 'invoice'])
             ->has('cartItems')
             ->doesntHave('order.orderItems')

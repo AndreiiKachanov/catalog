@@ -5,6 +5,7 @@ namespace App\Models\Admin\Cart;
 use App\Models\Admin\Cart\Order\OrderItem;
 use App\Models\Admin\Item\Item;
 use App\Traits\EloquentGetTableNameTrait;
+use Database\Factories\Admin\Cart\CartItemFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-
 
 /**
  * App\Models\Admin\Cart\CartItem
@@ -41,7 +41,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|CartItem withTrashed()
  * @method static Builder|CartItem withoutTrashed()
  * @property-read OrderItem|null $orderItem
- * @method static \Database\Factories\Admin\Cart\CartItemFactory factory($count = null, $state = [])
+ * @method static CartItemFactory factory($count = null, $state = [])
  * @mixin Eloquent
  */
 class CartItem extends Model

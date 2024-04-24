@@ -10,7 +10,10 @@ use Exception;
 
 class UsersTableSeeder extends Seeder
 {
-    public function run()
+    /**
+     * @throws Exception
+     */
+    public function run(): void
     {
         if (User::count() != 0) {
             throw new Exception(User::getTableName() . ' table is not empty. Stop all seeds!!!');
@@ -29,7 +32,5 @@ class UsersTableSeeder extends Seeder
             'status'            => User::STATUS_ACTIVE,
             'password'          => Hash::make('qwerty123')
         ]);
-
-//        factory(User::class, 1000)->create();
     }
 }

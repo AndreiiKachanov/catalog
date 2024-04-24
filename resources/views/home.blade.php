@@ -1,7 +1,3 @@
-@php
-    //phpinfo();
-@endphp
-
 @extends('layouts.app')
 @section('breadcrumbs', '')
 

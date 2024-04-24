@@ -4,7 +4,6 @@ namespace App\Http\Requests\Admin\Items;
 
 use App\Models\Admin\Item\Category;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class CreateCategoryRequest extends FormRequest
 {
@@ -13,7 +12,7 @@ class CreateCategoryRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -23,12 +22,12 @@ class CreateCategoryRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
-        $itemCategoriesTableName = Category::getTableName();
+        $categoriesTabName = Category::getTableName();
         $rules = [
             'title' => 'required|string|max:255',
-            'parent' => "nullable|exists:$itemCategoriesTableName,id",
+            'parent' => "nullable|exists:$categoriesTabName,id",
             'img' => 'mimes:jpg,png,jpeg,gif,svg'
         ];
 
@@ -36,7 +35,7 @@ class CreateCategoryRequest extends FormRequest
         if ($this->getMethod() === 'PUT') {
             $rules['parent'] = [
                 'nullable',
-                "exists:$itemCategoriesTableName,id",
+                "exists:$categoriesTabName,id",
                 function ($attribute, $value, $fail) {
                     $currentCat = $this->route('category');
                     $selectCat = Category::find($value);
@@ -52,17 +51,16 @@ class CreateCategoryRequest extends FormRequest
         return $rules;
     }
 
-    public function attributes()
+    public function attributes(): array
     {
-        $attributes = [
+        return [
             'title' => 'Название категории',
             'parent' => 'Родительская категория',
             'img' => 'Фото'
         ];
-        return $attributes;
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'required' => 'Поле <b>:attribute</b> обязательное для заполнения',

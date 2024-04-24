@@ -21,9 +21,7 @@ class SetOrderInfoRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @return array
      */
     public function rules(): array
     {
@@ -33,7 +31,7 @@ class SetOrderInfoRequest extends FormRequest
                 'string',
                 function ($attribute, $value, $fail) {
                     //токен должен быть 32 символа и в бд
-                    if ( !(Str::length($value) === 32 && Token::firstWhere('token', $value)) ) {
+                    if (!(Str::length($value) === 32 && Token::firstWhere('token', $value))) {
                         $fail($attribute . ' not valid');
                     }
                 }
@@ -55,7 +53,11 @@ class SetOrderInfoRequest extends FormRequest
         ];
     }
 
-    public function failedValidation(Validator $validator)
+    /**
+     * @param Validator $validator
+     * @return mixed
+     */
+    public function failedValidation(Validator $validator): mixed
     {
         throw new HttpResponseException(response()->json([
             'success'   => false,

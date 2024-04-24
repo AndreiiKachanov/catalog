@@ -14,7 +14,7 @@ class PermissionsTableSeeder extends Seeder
      * @return void
      * @throws Exception
      */
-    public function run()
+    public function run(): void
     {
         if (Permission::count() != 0) {
             throw new Exception(Permission::getTableName() . ' table is not empty. Stop all seeds!!!');

@@ -1,5 +1,5 @@
 @php
-    /** @var App\Entity\User\ $user */
+    /** @var \App\Models\User\User $user */
 @endphp
 
 @extends('layouts.app')

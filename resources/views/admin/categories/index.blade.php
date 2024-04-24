@@ -20,18 +20,9 @@
             background-color: #f8f8f8;
             color: #000;
             padding: .5rem;
-            /*background: #90ea02;*/
         }
         .row.striped:last-child {
             border-bottom: 1px solid #ddd;;
-        }
-
-        .row.striped:nth-child(odd){
-            /*background: #c6fe6e;*/
-        }
-
-        .row.striped:focus, .row.striped:hover{
-            /*background: #bcfd55;*/
         }
 
         @media screen and (max-width: 600px) {
@@ -50,7 +41,6 @@
         .orders, .sort-header {
             margin-right: 10px;
             font-weight: bold;
-            /*border: 1px solid red;*/
         }
         .order-color {
             color: red;

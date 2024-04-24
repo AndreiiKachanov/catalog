@@ -15,7 +15,7 @@ class CheckTokenRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -25,15 +25,15 @@ class CheckTokenRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'token' => [
                 'required',
                 'string',
                 function ($attribute, $value, $fail) {
-                    //токен должен быть  32 символа и в бд
-                    if ( !(Str::length($value) === 32 && Token::firstWhere('token', $value)) ) {
+                    //токен должен быть 32 символа и в бд
+                    if (!(Str::length($value) === 32 && Token::firstWhere('token', $value))) {
                         $fail($attribute . ' not valid');
                     }
                 }
@@ -41,7 +41,11 @@ class CheckTokenRequest extends FormRequest
         ];
     }
 
-    public function failedValidation(Validator $validator)
+    /**
+     * @param Validator $validator
+     * @return mixed
+     */
+    public function failedValidation(Validator $validator): mixed
     {
         throw new HttpResponseException(response()->json([
             'success'   => false,

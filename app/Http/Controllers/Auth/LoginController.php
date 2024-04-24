@@ -13,7 +13,6 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-
     use ThrottlesLogins;
 
     public function __construct()

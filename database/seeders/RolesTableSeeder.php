@@ -14,7 +14,7 @@ class RolesTableSeeder extends Seeder
      * @return void
      * @throws Exception
      */
-    public function run()
+    public function run(): void
     {
         if (Role::count() != 0) {
             throw new Exception(Role::getTableName() . ' table is not empty. Truncate all tables!');

@@ -7,8 +7,6 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 class StoreOrderRequest extends FormRequest
 {
@@ -17,17 +15,15 @@ class StoreOrderRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, mixed>
+     * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         try {
             $cartTokensTableName = Token::getTableName();
@@ -64,10 +60,12 @@ class StoreOrderRequest extends FormRequest
         } catch (QueryException $exception) {
             dd($exception->getMessage());
         }
-
     }
 
-    public function messages()
+    /**
+     * @return array
+     */
+    public function messages(): array
     {
         return [
             'required' => 'The <b>:attribute</b> field is required',
@@ -76,7 +74,11 @@ class StoreOrderRequest extends FormRequest
         ];
     }
 
-    public function failedValidation(Validator $validator)
+    /**
+     * @param Validator $validator
+     * @return mixed
+     */
+    public function failedValidation(Validator $validator): mixed
     {
         throw new HttpResponseException(response()->json([
             'success'   => false,

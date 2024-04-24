@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateItemsTable extends Migration
 {
-    private $itemsTableName;
+    private string $itemsTableName;
 
     public function __construct()
     {
@@ -19,7 +19,7 @@ class CreateItemsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         if (!Schema::hasTable($this->itemsTableName)) {
             Schema::create($this->itemsTableName, function (Blueprint $table) {
@@ -46,7 +46,7 @@ class CreateItemsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists($this->itemsTableName);
     }

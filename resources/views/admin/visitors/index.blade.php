@@ -32,9 +32,8 @@
         }
 
         fieldset {
-            /*width: max-content;*/
             margin-bottom: 10px;
-            padding: 0px 10px 0 10px;
+            padding: 0 10px 0 10px;
             border: 1px solid #cdcdcd;
         }
 
@@ -71,13 +70,10 @@
             height: auto;
         }
 
-        /*table.bottom tr td:nth-child(2) {*/
-        /*    text-align: left;*/
-        /*}*/
-
         tr.all_sum td:first-child {
             padding-left: 23px;
         }
+
         tr.all_sum td:last-child {
             padding-right: 34px;
         }
@@ -87,6 +83,7 @@
             tr.all_sum td:first-child {
                 padding-left: 0;
             }
+
             tr.all_sum td:last-child {
                 padding-right: 0;
             }
@@ -111,10 +108,6 @@
             table.bottom tr td:nth-child(2) {
                 text-align: right;
             }
-
-            /*caption {*/
-            /*    font-size: 1.3em;*/
-            /*}*/
 
             table.bottom thead {
                 border: none;
@@ -159,19 +152,15 @@
 
     <table class="bottom">
         <caption>
-{{--            <h2 class="text-center">Посетители</h2>--}}
-{{--            @isset($minDate)--}}
-                <fieldset>
-                    <legend>
-                        <h2>Посетители</h2>
-                    </legend>
-                    <p>Мобильник - <strong>{{ $countMobileUsers }}</strong></p>
-                    <p>Десктоп - <strong>{{ $countDesktopUsers }}</strong></p>
-                </fieldset>
-{{--            @endisset--}}
+            <fieldset>
+                <legend>
+                    <h2>Посетители</h2>
+                </legend>
+                <p>Мобильник - <strong>{{ $countMobileUsers }}</strong></p>
+                <p>Десктоп - <strong>{{ $countDesktopUsers }}</strong></p>
+            </fieldset>
             <p>Всего - <strong>{{ $countAllUsers }}</strong></p>
         </caption>
-
         <thead>
         <tr>
             <th scope="col">Дата первого входа</th>
@@ -205,7 +194,8 @@
                 </td>
                 <td data-label="Город">
                     @if(isset($token->ip_info['flag']))
-                        <img style="width: 15px" src="{{ $token->ip_info['flag']['img'] }}" alt="Flag" class="flag-icon">
+                        <img style="width: 15px" src="{{ $token->ip_info['flag']['img'] }}" alt="Flag"
+                             class="flag-icon">
                     @endif
                     {!! is_null($token->ip_info) ? '&nbsp;' : $token->ip_info['city'] ?? '&nbsp;' !!}
                 </td>

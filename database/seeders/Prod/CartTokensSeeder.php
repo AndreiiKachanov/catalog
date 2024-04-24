@@ -17,41 +17,10 @@ class CartTokensSeeder extends Seeder
     public function run(): void
     {
         try {
-            //$newTableName = 'carts_tokens2';
-            //
-            //Schema::table('orders_contacts2', function (Blueprint $table) {
-            //    if (Schema::hasColumn('orders_contacts2', 'token_id')) {
-            //        if (Schema::hasForeign('orders_contacts2', 'fk_token_orders_contacts2')) {
-            //            $table->dropForeign('fk_token_orders_contacts2');
-            //        }
-            //
-            //        //$table->dropIndex('idx_token_id2');
-            //    }
-            //});
-
-            //Schema::table('cart_items2', function (Blueprint $table) {
-            //    if (Schema::hasColumn('cart_items2', 'token_id')) {
-            //        $table->dropForeign('fk_token2');
-            //        $table->dropIndex('idx_token_id2');
-            //    }
-            //});
-
-            //Schema::dropIfExists($newTableName);
-            //
-            //Schema::create($newTableName, function (Blueprint $table) {
-            //    $table->smallIncrements('id');
-            //    $table->string('token', 64)->unique();
-            //    $table->ipAddress('ip')->nullable();
-            //    $table->timestamps();
-            //});
-
             $result = DB::connection('mysql_prod')->select('SELECT * FROM `carts_tokens`');
             $tokens = json_decode(json_encode($result), true);
-            //dd($tokens[0]);
-            //$tokens = Token::on('mysql_prod')->get();
 
             foreach ($tokens as $token) {
-                //$token = $token->getAttributes();
                 DB::table(Token::getTableName())->insert([
                     'id' => $token['id'],
                     'token' => $token['token'],
@@ -69,7 +38,6 @@ class CartTokensSeeder extends Seeder
                     'updated_at' => $token['updated_at'],
                 ]);
             }
-            //$this->command->info('Таблица ' . $newTableName . ' удачно создана и наполнена');
         } catch (Exception $e) {
             $errorMsg = sprintf("Error in %s, line %d. %s", __METHOD__, __LINE__, $e->getMessage());
             throw new Exception($errorMsg);

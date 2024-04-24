@@ -19,38 +19,30 @@
             </button>
         </span>
     </div>
-
-
 </template>
 
 <script>
-export default {
-    props: ['countFromCart', 'hasMinOrder'],
-    name: "CountCartItems",
-    data: () => ({
-
-    }),
-    methods: {
-        onInput(e) {
-            let cnt = Math.max(1, parseInt(e.target.value));
-            // Math.max(1, newCnt);
-            // console.log('cnt=', cnt);
-            this.$emit('setCnt', cnt);
-            // console.log(countFromCart);
+    export default {
+        props: ['countFromCart', 'hasMinOrder'],
+        name: "CountCartItems",
+        methods: {
+            onInput(e) {
+                let cnt = Math.max(1, parseInt(e.target.value));
+                this.$emit('setCnt', cnt);
+            },
         },
-    },
-}
+    }
 </script>
 
 <style lang="scss">
     .styled-input {
         box-shadow: inset 0 0 3px 1px rgb(255, 0, 0);
     }
+
     .input-group {
         @include media-breakpoint-down(xs) {
 
             span.input-group-prepend, span.input-group-append, input[type='text'] {
-                //border: 1px solid red;
                 button {
                     padding: 0.25rem 0.38rem
                 }
@@ -59,7 +51,6 @@ export default {
             button {
                 line-height: 0 !important;
             }
-            //border: 1px solid red;
             .fa {
                 line-height: 0 !important;
                 padding-bottom: 1px;
@@ -75,9 +66,7 @@ export default {
             }
         }
         @include media-breakpoint-down(lg) {
-            //border: 1px solid red;
             span.input-group-prepend, span.input-group-append, input[type='text'] {
-                //border: 1px solid red;
                 button {
                     padding: 0.25rem 0.38rem
                 }

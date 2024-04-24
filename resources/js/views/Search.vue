@@ -3,14 +3,14 @@
 </template>
 
 <script>
-    import SearchComponent from "../components/Search.vue";
-    export default {
-        name: "Search",
-        data: () => ({
-        }),
-        components: {
-            SearchComponent
-        },
-    }
+import SearchComponent from '../components/Search.vue';
+
+export default {
+    name: "Search",
+    data: () => ({}),
+    components: {
+        SearchComponent
+    },
+}
 </script>
 

@@ -6,15 +6,16 @@ use App\Models\Admin\Item\Category;
 use App\Models\Admin\Item\Item;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Storage;
+use Random\RandomException;
 
 /**
- * @extends Factory<\App\Models\Admin\Item\Category>
+ * @extends Factory<Category>
  */
 class ItemFactory extends Factory
 {
     protected $model = Item::class;
 
-    private $items = [
+    private array $items = [
         "Звёздная ракета",
         "Магический дракон",
         "Радужный единорог",
@@ -404,11 +405,10 @@ class ItemFactory extends Factory
     ];
 
     /**
-     * Define the model's default state.
-     *
      * @return array
+     * @throws RandomException
      */
-    public function definition()
+    public function definition(): array
     {
         // Выберите случайное название из массива
         $randomIndex = array_rand($this->items);
@@ -416,22 +416,17 @@ class ItemFactory extends Factory
 
         $randomCountSymbols = random_int(10, 40);
         return [
-            //'title' => $this->faker->jobTitle,
-            //'title' => ucfirst(implode(' ', $this->faker->words($randomCount))),
             'title' => $title,
-            //'title' => $this->faker->bank(),
-            //'title' => $this->faker->realText(100),
-            //'note' => $this->faker->realText(5),
             'note' =>  $this->faker->randomElement([null, ucfirst($this->faker->realText($randomCountSymbols))]),
             'article_number' => $this->faker->postcode,
             'price' => $this->faker->numberBetween(50, 100),
             'min_order_amount' => $this->faker->numberBetween(10, 500),
-            'img' => $this->faker->loremflickr(
+            'img' => $this->faker->loremFlickr(
                 Storage::disk('uploads'),
-                'items',
+                'toy',
                 300,
                 350,
-                'toy'
+                'items'
             ),
             //'img' => null,
             'is_new' => $this->faker->randomElement([true, false]),

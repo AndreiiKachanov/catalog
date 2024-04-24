@@ -2,7 +2,7 @@
     <div class="form-group">
         <label class="mr-1" :for="name">{{ label }}</label>
         <transition v-if="activated" name="icon" mode="out-in" appear appear-active-class="icon-appear-active">
-            <fa-icon  :icon="icon" :key="icon" :class="iconClasses"></fa-icon>
+            <fa-icon :icon="icon" :key="icon" :class="iconClasses"></fa-icon>
         </transition>
         <input
             :id="name"
@@ -15,16 +15,14 @@
     </div>
 </template>
 
-
 <script>
-    import { library } from '@fortawesome/fontawesome-svg-core'
-    import { FontAwesomeIcon as FaIcon } from '@fortawesome/vue-fontawesome'
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {FontAwesomeIcon as FaIcon} from '@fortawesome/vue-fontawesome'
+import {faCircleExclamation, faCheckCircle} from '@fortawesome/free-solid-svg-icons'
 
-    import { faCircleExclamation, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
-    // import { faFacebook, faTiktok, faStackOverflow, faSquareGit } from '@fortawesome/free-brands-svg-icons'
-    library.add(faCircleExclamation, faCheckCircle)
+library.add(faCircleExclamation, faCheckCircle);
 
-export default  {
+export default {
     name: "AppField",
     components: {
         FaIcon
@@ -53,26 +51,42 @@ export default  {
 </script>
 
 <style lang="scss">
-    .icon-enter-active {
-        animation: iconIn 0.3s;
-    }
-    .icon-leave-active {
-        animation: iconOut 0.3s;
-    }
-    .icon-appear-active {
-        animation: iconFade 0.3s;
-    }
+.icon-enter-active {
+    animation: iconIn 0.3s;
+}
 
-    @keyframes iconIn {
-        from{transform: rotateY(-90deg)}
-        to{transform: rotateY(0deg)}
+.icon-leave-active {
+    animation: iconOut 0.3s;
+}
+
+.icon-appear-active {
+    animation: iconFade 0.3s;
+}
+
+@keyframes iconIn {
+    from {
+        transform: rotateY(-90deg)
     }
-    @keyframes iconOut {
-        from{transform: rotateY(0deg)}
-        to{transform: rotateY(90deg)}
+    to {
+        transform: rotateY(0deg)
     }
-    @keyframes iconFade {
-        from{opacity: 0}
-        to{opacity: 1}
+}
+
+@keyframes iconOut {
+    from {
+        transform: rotateY(0deg)
     }
+    to {
+        transform: rotateY(90deg)
+    }
+}
+
+@keyframes iconFade {
+    from {
+        opacity: 0
+    }
+    to {
+        opacity: 1
+    }
+}
 </style>

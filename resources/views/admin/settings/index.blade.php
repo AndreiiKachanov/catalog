@@ -1,6 +1,8 @@
 @php
     /** @var \App\Models\Admin\Setting $setting */
+    /** @var \App\Models\Admin\PriceHistory $priceHistory */
     /** @var \Illuminate\Database\Eloquent\Collection $settings */
+    /** @var \Illuminate\Database\Eloquent\Collection $priceHistories */
 @endphp
 @extends('layouts.app')
 
@@ -25,7 +27,7 @@
                                 {{ Form::label($propKey, $labelTitleWithStarSymbol, ['class' => 'col-form-label']) }}
 
                                 @php
-                                    $numberInputTypes = ['price_increase', 'min_order_cost'];
+                                    $numberInputTypes = ['price_increase','min_order_cost'];
                                     $textAreaType = ['custom_text'];
                                     $fieldType = in_array($propKey, $numberInputTypes)
                                     ? 'number'
@@ -37,7 +39,17 @@
                                             'id' => $propKey,
                                             'required' => $isRequired,
                                             in_array($propKey, $textAreaType) && strlen($setting->prop_value) > 100 ? 'rows=8' : 'rows=4'
-                                        ])  }}
+                                        ])
+                                }}
+                                @if($setting->prop_key === 'price_regulation' && $priceHistories->count() > 0)
+                                    <div>История изменений:</div>
+                                    <p>
+                                        @foreach($priceHistories as $priceHistory)
+                                            <span style="font-size: 13px">{{ $priceHistory->price_updated_at->format('d.m.y') }}</span>
+                                              <strong>{{ ($priceHistory->percent > 0 ? '+' . $priceHistory->percent : $priceHistory->percent) . '%' }}</strong>;
+                                        @endforeach
+                                    </p>
+                                @endif
                                 @if ($errors->has($propKey))
                                     <span class="invalid-feedback">{!! $errors->first($propKey) !!}</span>
                                 @endif

@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateUsersTable extends Migration
 {
-    private $usersTableName;
+    private string $usersTableName;
 
     public function __construct()
     {
@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         if (!Schema::hasTable($this->usersTableName)) {
             Schema::create($this->usersTableName, function (Blueprint $table) {
@@ -51,7 +51,7 @@ class CreateUsersTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists($this->usersTableName);
     }

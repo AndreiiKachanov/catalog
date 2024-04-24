@@ -1,4 +1,4 @@
-<template @click="test123">
+<template>
     <div>
         <h3 class="text-center">Заказы из {{ category.title }}</h3>
         <vue-good-table
@@ -13,13 +13,13 @@
 </template>
 
 <script>
-    import moment from 'moment';
+import moment from 'moment';
+
 export default {
     props: {
         category: Object
     },
-    components: {
-    },
+    components: {},
     data: () => ({
         columns: [
             {
@@ -61,10 +61,8 @@ export default {
     }),
     computed: {
         rows() {
-            // console.log(this.category);
             return this.category.order_items.map((element, index) => {
-                // console.log(element);
-                const { item, order } = element;
+                const {item, order} = element;
                 return {
                     'createdAt': element.created_at,
                     'itemTitle': item.title,
@@ -76,8 +74,6 @@ export default {
                 };
             });
         },
-    },
-    methods: {
     }
 }
 </script>

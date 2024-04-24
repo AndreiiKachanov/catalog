@@ -49,10 +49,6 @@
             height: auto;
         }
 
-        /*.img-fluid {*/
-        /*    max-width: 100%;*/
-        /*    height: auto;*/
-        /*}*/
         img {
             vertical-align: middle;
             border-style: none;
@@ -131,10 +127,6 @@
             }
 
             table.bottom td::before {
-                /*
-                * aria-label has no advantage, it won't be read inside a table
-                content: attr(aria-label);
-                */
                 content: attr(data-label);
                 float: left;
                 font-weight: bold;

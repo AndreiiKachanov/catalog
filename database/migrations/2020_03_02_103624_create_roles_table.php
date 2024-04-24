@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateRolesTable extends Migration
 {
-    private $rolesTableName;
+    private string $rolesTableName;
 
     public function __construct()
     {
@@ -19,7 +19,7 @@ class CreateRolesTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         if (!Schema::hasTable($this->rolesTableName)) {
             Schema::create($this->rolesTableName, function (Blueprint $table) {
@@ -28,7 +28,6 @@ class CreateRolesTable extends Migration
                 $table->timestamps();
             });
         }
-
     }
 
     /**
@@ -36,7 +35,7 @@ class CreateRolesTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists($this->rolesTableName);
     }

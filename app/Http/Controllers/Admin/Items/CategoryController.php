@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin\Items;
 use App\Models\Admin\Item\Category;
 use App\Http\Requests\Admin\Items\CreateCategoryRequest;
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Item\Item;
 use App\Services\ImageService;
 use App\UseCases\Categories\CategoryService;
 use Exception;
@@ -22,7 +21,6 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //$categories = Category::defaultOrder()->withCount(['items', 'orders'])->withDepth()->get();
         $categories = Category::defaultOrder()
             ->withCount(['items', 'orderItems' => function ($query) {
                 $query->whereDoesntHave('order', function ($subQuery) {
@@ -79,10 +77,6 @@ class CategoryController extends Controller
             'items',
             'children'
         ]);
-        //$categories = $category->descendants()->pluck('id');
-        //$categories[] = $category->getKey();
-        //$countRelatedModels = Item::whereIn('category_id', $categories)->count();
-        //return view('admin.categories.show', compact('category', 'countRelatedModels'));
         return view('admin.categories.show', compact('category'));
     }
 
@@ -210,7 +204,6 @@ class CategoryController extends Controller
             'orderItems.order.token.invoice', // Загружаем связанные записи
             'orderItems.item' // Загружаем "orders.item"
         ]);
-        //dd($category);
         return view('admin.categories.show_orders', compact('category'));
     }
 
@@ -218,7 +211,8 @@ class CategoryController extends Controller
      * @param Category $category
      * @return RedirectResponse
      */
-    public function showItems(Category $category) {
+    public function showItems(Category $category)
+    {
         return redirect()->action([ItemsController::class, 'index'], [
             'radio_search_by' => 'category',
             'search_input' => $category->title,

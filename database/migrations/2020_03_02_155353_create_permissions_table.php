@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreatePermissionsTable extends Migration
 {
-
-    private $permissionsTableName;
+    private string $permissionsTableName;
 
     public function __construct()
     {
@@ -20,7 +19,7 @@ class CreatePermissionsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         if (!Schema::hasTable($this->permissionsTableName)) {
             Schema::create($this->permissionsTableName, function (Blueprint $table) {
@@ -29,7 +28,6 @@ class CreatePermissionsTable extends Migration
                 $table->timestamps();
             });
         }
-
     }
 
     /**
@@ -37,7 +35,7 @@ class CreatePermissionsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists($this->permissionsTableName);
     }

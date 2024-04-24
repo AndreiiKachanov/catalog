@@ -3,10 +3,7 @@
 namespace App\Providers;
 
 use App\Services\TestService;
-use App\Services\TestServiceToFacade;
-use App\UseCases\ApiService;
 use App\UseCases\MessangerNotificatorInterface;
-use App\UseCases\SendOrderService;
 use App\UseCases\TelegramNotificator;
 use Faker\Factory;
 use Faker\Generator;
@@ -20,9 +17,9 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
-        $this->app->singleton(Generator::class, function() {
+        $this->app->singleton(Generator::class, function () {
             $faker = Factory::create('ru_RU');
             $faker->addProvider(new FakerImageProvider($faker));
             return $faker;
@@ -33,13 +30,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(MessangerNotificatorInterface::class, TelegramNotificator::class);
-
-        //$this->app->singleton(ApiService::class, function ($app) {
-        //    return new ApiService($app->make(SendOrderService::class));
-        //});
-        //$this->app->bind(ApiService::class, function ($app) {
-        //    return new ApiService($app->make(SendOrderService::class));
-        //});
     }
 
     /**
@@ -47,13 +37,8 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         Paginator::useBootstrapFour();
-        //$this->app->singleton(TestServiceToFacade::class, function () {
-        //
-        //    return new TestServiceToFacade('token123');
-        //});
-
     }
 }

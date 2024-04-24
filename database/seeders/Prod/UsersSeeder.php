@@ -2,9 +2,7 @@
 
 namespace Database\Seeders\Prod;
 
-use App\Models\Admin\Setting;
 use App\Models\User\User;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -25,9 +23,7 @@ class UsersSeeder extends Seeder
                 DB::table(User::getTableName())->insert([
                     'id' => $item['id'],
                     'name' => $item['name'],
-                    //'password' => $item['password'],
                     'password' => Hash::make('qwerty123'),
-                    //'email' => $item['email'],
                     'email' => 'test@test.loc',
                     'email_verified_at' => $item['email_verified_at'],
                     'role_id' => $item['role_id'],

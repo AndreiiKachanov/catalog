@@ -8,7 +8,7 @@ use Kalnoy\Nestedset\NestedSet;
 
 class CreateItemsCategoriesTable extends Migration
 {
-    private $itemCategoryTableName;
+    private string $itemCategoryTableName;
 
     public function __construct()
     {
@@ -20,14 +20,13 @@ class CreateItemsCategoriesTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         if (!Schema::hasTable($this->itemCategoryTableName)) {
             Schema::create($this->itemCategoryTableName, function (Blueprint $table) {
                 $table->smallIncrements('id');
                 $table->string('title')->nullable();
                 $table->string('img')->nullable();
-                //$table->unsignedSmallInteger('parent_id')->nullable();
                 NestedSet::columns($table);
                 $table->string('slug', 1200)->nullable();
                 $table->softDeletes();
@@ -41,7 +40,7 @@ class CreateItemsCategoriesTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists($this->itemCategoryTableName);
     }

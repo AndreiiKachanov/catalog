@@ -6,10 +6,10 @@ class TestService
 {
     public function __construct($var)
     {
-
     }
 
-    public function test() {
+    public function test()
+    {
         dd('test_service');
     }
 }

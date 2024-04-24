@@ -1,18 +1,18 @@
-import { makeRequest, makeRequestPost, makeRequestPostJson } from "../api/server";
+import {makeRequest, makeRequestPostJson} from '../api/server';
 
 export default {
     namespaced: true,
     state: {
         // сохраненные в корзине товары
         order: {},
-            // {
-            //     "name": "1df",
-            //     "phone": "2df",
-            //     "city": "3",
-            //     "street": "4",
-            //     "house_number": "5",
-            //     "transport_company": "6"
-            // }
+        // {
+        //     "name": "1df",
+        //     "phone": "2df",
+        //     "city": "3",
+        //     "street": "4",
+        //     "house_number": "5",
+        //     "transport_company": "6"
+        // }
         isValidShoppingCart: false
     },
     getters: {
@@ -24,8 +24,6 @@ export default {
             state.order = order;
         },
         setOrderField(state, payload) {
-            // console.log(state.order[0]);
-            // state.order[0].`${payload.field}` = payload.value;
             state.order[payload.field] = payload.value;
         },
         clearOrder(state) {
@@ -36,32 +34,32 @@ export default {
         }
     },
     actions: {
-        async load({ commit, rootGetters }) {
-            let token = rootGetters['cart/token'];
-            let url = `/api/cart/load-order?token=${token}`;
-            let order = await makeRequest(url);
-            // console.log(order);
-            commit('setOrder', order);
+        async load({commit, rootGetters}) {
+            const token = rootGetters['cart/token'];
+            const url = `/api/cart/load-order?token=${token}`;
+            try {
+                const order = await makeRequest(url);
+                commit('setOrder', order);
+            } catch (error) {
+                console.error('Ошибка во время загрузки информации о заказчике: ', error);
+            }
         },
-        async sendCustomerInfoToServer({ state, commit, rootGetters }, { value, field }) {
+        async sendCustomerInfoToServer({state, commit, rootGetters}, {value, field}) {
             let token = rootGetters['cart/token'];
             let url = `/api/cart/set-order-info`;
             try {
-                let res = await makeRequestPostJson(url, { token, value, field });
-                // if (res) {
-                //     console.log(`Поле ${field} удачно обновлено`);
-                // }
-            } catch (e) {
-                console.log(e);
+                await makeRequestPostJson(url, {token, value, field});
+            } catch (error) {
+                console.error('Ошибка во время обновления информации о заказчике: ', error);
             }
         },
-        setOrderField({ commit }, payload) {
+        setOrderField({commit}, payload) {
             commit('setOrderField', payload);
         },
-        clearOrder({ commit }) {
+        clearOrder({commit}) {
             commit('clearOrder');
         },
-        setIsValidShoppingCart({ commit }, flag) {
+        setIsValidShoppingCart({commit}, flag) {
             commit('setIsValidShoppingCart', flag);
         }
     }

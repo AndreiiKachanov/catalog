@@ -4,13 +4,15 @@ namespace App\UseCases;
 
 use App\Models\Admin\Cart\Invoice;
 use App\Models\Admin\Cart\Token;
+use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
 
 class ApiService
 {
-    private $sendOrderService;
+    private SendOrderService $sendOrderService;
 
     public function __construct(SendOrderService $sendOrderService)
     {
@@ -35,8 +37,8 @@ class ApiService
 
     /**
      * @param Request $request
-     * @param SendOrderService $service
      * @return string
+     * @throws GuzzleException
      */
     public function generateNewToken(Request $request): string
     {
@@ -59,7 +61,7 @@ class ApiService
                 'is_desktop' => $agent->isDesktop(),
                 'is_robot' => $agent->isRobot()
             ]);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             dd($exception->getMessage());
         }
         return $token->token;

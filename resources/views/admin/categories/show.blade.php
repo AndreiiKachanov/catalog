@@ -160,9 +160,6 @@
                             <td data-label="Название">
                                 {{ $category->title }}
                             </td>
-{{--                            <td data-label="Все подкатегории">--}}
-{{--                                {{ $category->descendants->count() }}--}}
-{{--                            </td>                            --}}
                             <td data-label="Кол-во подкатегорий">
                                 {{ $category->children_count }}
                             </td>

@@ -3,12 +3,10 @@
 namespace Database\Factories\Admin\Cart;
 
 use App\Models\Admin\Cart\Invoice;
-use App\UseCases\ApiService;
-use App\UseCases\SendOrderService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Admin\Cart\Invoice>
+ * @extends Factory<Invoice>
  */
 class InvoiceFactory extends Factory
 {
@@ -21,7 +19,6 @@ class InvoiceFactory extends Factory
      */
     public function definition(): array
     {
-
         return [
             'bill_number' => date('Y') . '-' . str_pad(Invoice::max('id') * 33, 6, '0', STR_PAD_LEFT)
         ];

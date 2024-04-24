@@ -12,8 +12,8 @@ use Exception;
 
 class SendOrderService
 {
-    private $mailer;
-    private $client;
+    private MailerInterface $mailer;
+    private Client $client;
 
     public function __construct(MailerInterface $mailer, Client $client)
     {
@@ -31,7 +31,7 @@ class SendOrderService
             $this->mailer->to([config('mail.to')])->send(new SendOrder($order));
             Log::info('Order email successfully sent to ' . config('mail.to'));
         } catch (Exception $e) {
-            $errorMsg = sprintf("Error in %s, line %d. %s", __METHOD__, __LINE__, $e->getMessage());
+            $errorMsg = formatErrorMessage(__METHOD__, __LINE__, $e->getMessage());
             Log::error($errorMsg);
         }
     }
@@ -46,7 +46,9 @@ class SendOrderService
     {
         $sum = $order->orderItems->sum(fn($item) => $item->item->price * $item->cnt);
         $url = route('admin.orders.show', $order);
-        $message = 'Заказ № ' . $order->token->invoice->bill_number . ' с сайта ' . config('app.site_short') . ' на общую сумму ' . $sum . ' руб. ' . $url;
+        $billNumber = $order->token->invoice->bill_number;
+        $siteShort = config('app.site_short');
+        $message = 'Заказ № ' . $billNumber . ' с сайта ' . $siteShort . ' на общую сумму ' . $sum . ' руб. ' . $url;
         $chatId = config('app.telegram_chat_id');
         $botToken = config('app.telegram_bot_token');
         $url = "https://api.telegram.org/bot$botToken/sendMessage";
@@ -66,17 +68,16 @@ class SendOrderService
                 Log::info('Message "' . $message . '" sent to telegram');
             } else {
                 Log::error('Message not sent to telegram');
-                //dd($responseData);
             }
         } catch (Exception $e) {
-            $errorMsg = sprintf("Error in %s, line %d. %s", __METHOD__, __LINE__, $e->getMessage());
+            $errorMsg = formatErrorMessage(__METHOD__, __LINE__, $e->getMessage());
             Log::error($errorMsg);
         }
     }
 
     /**
-     * @param string $ip
-     * @return false[]
+     * @param string $ipAddress
+     * @return array|false[]
      * @throws GuzzleException
      */
     public function getIpAddressInfo(string $ipAddress): array
@@ -98,14 +99,12 @@ class SendOrderService
                     'country' => $responseData['country'],
                     'country_code' => $responseData['country_code'],
                 ];
-                //Log::info('Message "' . $message . '" sent to telegram');
-            } else {
-                return ['success' => false];
             }
         } catch (Exception $e) {
-            dd($e->getMessage());
-            //$errorMsg = sprintf("Error in %s, line %d. %s", __METHOD__, __LINE__, $e->getMessage());
-            //Log::error($errorMsg);
+            $errorMsg = formatErrorMessage(__METHOD__, __LINE__, $e->getMessage());
+            Log::error($errorMsg);
         }
+
+        return ['success' => false];
     }
 }

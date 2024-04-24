@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Cart;
 
-use App\Models\Admin\Cart\Token;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -15,7 +14,7 @@ class CartLoadRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -25,7 +24,7 @@ class CartLoadRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'token' => [
@@ -41,7 +40,11 @@ class CartLoadRequest extends FormRequest
         ];
     }
 
-    public function failedValidation(Validator $validator)
+    /**
+     * @param Validator $validator
+     * @return mixed
+     */
+    public function failedValidation(Validator $validator): mixed
     {
         throw new HttpResponseException(response()->json([
             'success'   => false,

@@ -12,7 +12,7 @@ class UpdateCategoryRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -22,16 +22,16 @@ class UpdateCategoryRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
-        $itemCategoriesTableName = Category::getTableName();
+        $categoriesTabName = Category::getTableName();
         return [
             'title' => 'required|string|max:255',
             'img' => 'mimes:jpg,png,jpeg,gif,svg',
             'parent' => [
                 'nullable',
                 'integer',
-                "exists:$itemCategoriesTableName,id",
+                "exists:$categoriesTabName,id",
                 function ($attribute, $value, $fail) {
                     $currentCat = $this->route('category');
                     $selectCat = Category::find($value);

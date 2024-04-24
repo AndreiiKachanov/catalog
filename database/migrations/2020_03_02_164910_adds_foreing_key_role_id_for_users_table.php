@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Schema;
 
 class AddsForeingKeyRoleIdForUsersTable extends Migration
 {
-    private $usersTableName;
-    private $rolesTableName;
+    private string $usersTableName;
+    private string $rolesTableName;
 
     public function __construct()
     {
@@ -22,7 +22,7 @@ class AddsForeingKeyRoleIdForUsersTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table($this->usersTableName, function (Blueprint $table) {
             //создаем  индекс для role_id
@@ -42,7 +42,7 @@ class AddsForeingKeyRoleIdForUsersTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table($this->usersTableName, function (Blueprint $table) {
             if (Schema::hasColumn($this->usersTableName, 'role_id')) {

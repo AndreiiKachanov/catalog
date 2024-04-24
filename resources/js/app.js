@@ -1,5 +1,5 @@
 import './bootstrap';
-import { createApp } from 'vue';
+import {createApp} from 'vue';
 // базовый объект, который выводится во view
 import App from './components/App';
 
@@ -10,20 +10,12 @@ import store from './store/index';
 import router from './router/index';
 
 let locationPath = window.location.pathname;
-// console.log(locationPath);
-
-
-// ^\/category\/[\w\-]+$ - любой буквенный символ или дефис
-// ^\/category\/[a-z\-0-1]+$
-
-// console.log('res=', /^\/category\/[a-z\-0-1]+$/.test(locationPath)); // false
 let isSubCategoryPath = /^\/category\/[a-z0-9\-]*$/.test(locationPath);
 let isProductItemPath = /^\/product\/[a-z0-9\-]*$/.test(locationPath);
 
 // Монтируем vue только на данных страницах
 let arrPath = ['/', '/cart', '/contacts', '/order', '/search'];
 if (arrPath.indexOf(locationPath) > -1 || isSubCategoryPath || isProductItemPath) {
-    // console.log('test');
     const app = createApp({});
 
     app.component('app-component', App);
@@ -35,15 +27,13 @@ if (arrPath.indexOf(locationPath) > -1 || isSubCategoryPath || isProductItemPath
     store.dispatch('categories/loadCategories');
     store.dispatch('settings/loadSettings');
 
-    store.dispatch('products/load').then(() => {
-        // store.dispatch('order/load').then(() => {
-        //     app.mount('#app-vue');
-        // });
-    });
 
     store.dispatch('cart/load').then(() => {
         store.dispatch('order/load').then(() => {
-            app.mount('#app-vue');
+            // app.mount('#app-vue');
+            store.dispatch('products/load').then(() => {
+                app.mount('#app-vue');
+            });
         });
     });
 

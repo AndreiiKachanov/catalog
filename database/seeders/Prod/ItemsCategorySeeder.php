@@ -2,31 +2,25 @@
 
 namespace Database\Seeders\Prod;
 
-use App\Models\Admin\Cart\Token;
 use App\Models\Admin\Item\Category;
 use Exception;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-use Kalnoy\Nestedset\NestedSet;
 
 class ItemsCategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     * @throws Exception
      */
     public function run(): void
     {
         try {
-            //$categories = Category::on('mysql_prod')->withTrashed()->get();
             $result = DB::connection('mysql_prod')->select('SELECT * FROM `items_categories`');
             $categories = json_decode(json_encode($result), true);
 
             $data = [];
             foreach ($categories as $category) {
-                //$category = $category->getAttributes();
                    $arr['id'] = $category['id'];
                    $arr['title'] =  $category['title'];
                    $arr['img'] = $category['img'];

@@ -7,11 +7,16 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CreateItemRequest extends FormRequest
 {
-    private $itemCategoriesTableName;
+    private string $itemCategoriesTableName;
+
     /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
+     * @param array $query
+     * @param array $request
+     * @param array $attributes
+     * @param array $cookies
+     * @param array $files
+     * @param array $server
+     * @param $content
      */
     public function __construct(
         array $query = [],
@@ -22,12 +27,11 @@ class CreateItemRequest extends FormRequest
         array $server = [],
         $content = null
     ) {
-
         $this->itemCategoriesTableName = Category::getTableName();
         parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
     }
 
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -37,7 +41,7 @@ class CreateItemRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
          $rules = [
             'title' => 'required|string|max:255',
@@ -45,24 +49,20 @@ class CreateItemRequest extends FormRequest
             'article_number' => 'required|string|max:100',
             'price' => 'required|numeric|min:1|max:1000000000',
             'min_order_amount' => 'nullable|numeric|min:1|max:1000000000',
-            //'is_new' => 'required',
-            //'is_hit' => 'required',
-            //'is_bestseller' => 'required',
             'category' => "required|integer|exists:$this->itemCategoriesTableName,id",
-            //            'img' => 'mimes:jpg,png,jpeg,gif,svg|max:1000|dimensions:min_width=100,min_height=100,max_width=500,max_height=500'
             'img' => 'required|mimes:jpg,png,jpeg,gif,svg'
-        ];
+         ];
 
-        if ($this->getMethod() === 'PUT') {
-            $rules['img'] = 'mimes:jpg,png,jpeg,gif,svg';
-        }
+         if ($this->getMethod() === 'PUT') {
+             $rules['img'] = 'mimes:jpg,png,jpeg,gif,svg';
+         }
 
          return $rules;
     }
 
-    public function attributes()
+    public function attributes(): array
     {
-        $attributes = [
+        return [
             'title' => 'Название',
             'note' => 'Примечание',
             'article_number' => 'Артикул',
@@ -74,10 +74,9 @@ class CreateItemRequest extends FormRequest
             'category' => 'Категория',
             'img' => 'Фото'
         ];
-        return $attributes;
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'required' => 'Поле <b>:attribute</b> обязательное для заполнения',

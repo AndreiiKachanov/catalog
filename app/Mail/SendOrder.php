@@ -10,16 +10,16 @@ class SendOrder extends Mailable
 {
     use SerializesModels;
 
-    public $contact;
+    public Order $contact;
     public function __construct(Order $contact)
     {
         $this->contact = $contact;
     }
 
-    public function build()
+    public function build(): SendOrder
     {
-        return $this->view('emails.send_orders2', ['contact' => $this->contact])
+        return $this->view('emails.send_orders', ['contact' => $this->contact])
             ->from(config('mail.from.address'))
-            ->subject("Заказ с сайта " . config('app.site_short'));
+            ->subject('Заказ с сайта ' . config('app.site_short'));
     }
 }

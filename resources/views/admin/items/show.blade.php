@@ -1,6 +1,5 @@
 @php
     /** @var \App\Models\Admin\Item\Item $item */
-
 @endphp
 
 @extends('layouts.app')
@@ -27,10 +26,12 @@
                 <th>Артикул</th><td>{{ $item->article_number }}</td>
             </tr>
             <tr>
-                <th>Цена закупки</th><td>{{ $item->getRawOriginal('price') }} &#8381</td>
+                <th>Цена закупки</th>
+                <td>{{ $item->getRawOriginal('price') }} &#8381</td>
             </tr>
             <tr>
-                <th>Цена c {{ \App\Models\Admin\Setting::firstWhere('prop_key', 'price_increase')->prop_value }} % </th><td>{{ $item->price }} &#8381</td>
+                <th>{!! formatPrice(\App\Services\SettingsService::getPriceIncrease(), 'Наценка'); !!}</th>
+                <td>{{ $item->price }} &#8381</td>
             </tr>
             <tr>
                 <th>Мин. заказ</th><td> {{ $item->min_order_amount }}</td>

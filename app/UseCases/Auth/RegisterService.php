@@ -11,9 +11,8 @@ use Illuminate\Contracts\Mail\Mailer as MailerInterface;
 
 class RegisterService
 {
-
-    private $mailer;
-    private $dispatcher;
+    private MailerInterface $mailer;
+    private Dispatcher $dispatcher;
 
     public function __construct(MailerInterface $mailer, Dispatcher $dispatcher)
     {
@@ -21,7 +20,7 @@ class RegisterService
         $this->dispatcher = $dispatcher;
     }
 
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request): void
     {
         $user = User::register(
             $request['name'],

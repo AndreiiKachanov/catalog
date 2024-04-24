@@ -2,9 +2,11 @@
 
 namespace App\Models\User;
 
-
 use App\Traits\EloquentGetTableNameTrait;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\User\PermissionRoles
@@ -13,17 +15,17 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $permission_id
  * @property int $role_id
  * @property string|null $test
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\PermissionRoles newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\PermissionRoles newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\PermissionRoles query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\PermissionRoles whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\PermissionRoles wherePermissionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\PermissionRoles whereRoleId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\PermissionRoles whereTest($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User\PermissionRoles whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder|PermissionRoles newModelQuery()
+ * @method static Builder|PermissionRoles newQuery()
+ * @method static Builder|PermissionRoles query()
+ * @method static Builder|PermissionRoles whereCreatedAt($value)
+ * @method static Builder|PermissionRoles wherePermissionId($value)
+ * @method static Builder|PermissionRoles whereRoleId($value)
+ * @method static Builder|PermissionRoles whereTest($value)
+ * @method static Builder|PermissionRoles whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class PermissionRoles extends Model
 {

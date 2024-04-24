@@ -5,6 +5,7 @@ namespace App\Models\Admin\Item;
 use App\Models\Admin\Cart\Order\OrderItem;
 use App\Traits\EloquentGetTableNameTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Database\Factories\Admin\Item\CategoryFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +20,6 @@ use Illuminate\Support\Carbon;
 use Kalnoy\Nestedset\Collection;
 use Kalnoy\Nestedset\NodeTrait;
 use Kalnoy\Nestedset\QueryBuilder;
-
 
 /**
  * App\Models\Admin\Item\Category
@@ -38,12 +38,12 @@ use Kalnoy\Nestedset\QueryBuilder;
  * @property-read int|null $children_count
  * @property-read Collection<int, Category> $childrens
  * @property-read int|null $childrens_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Admin\Item\Item> $items
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Item> $items
  * @property-read int|null $items_count
- * @property-read \App\Models\Admin\Item\Item|null $latestContact
- * @property-read \App\Models\Admin\Item\Item|null $mostPrice
- * @property-read \App\Models\Admin\Item\Item|null $mostPriceArticleNumber
- * @property-read \App\Models\Admin\Item\Item|null $oldestContact
+ * @property-read Item|null $latestContact
+ * @property-read Item|null $mostPrice
+ * @property-read Item|null $mostPriceArticleNumber
+ * @property-read Item|null $oldestContact
  * @property-read \Illuminate\Database\Eloquent\Collection<int, OrderItem> $orderItems
  * @property-read int|null $order_items_count
  * @property-read Category|null $parent
@@ -56,7 +56,7 @@ use Kalnoy\Nestedset\QueryBuilder;
  * @method static QueryBuilder|Category defaultOrder(string $dir = 'asc')
  * @method static QueryBuilder|Category descendantsAndSelf($id, array $columns = [])
  * @method static QueryBuilder|Category descendantsOf($id, array $columns = [], $andSelf = false)
- * @method static \Database\Factories\Admin\Item\CategoryFactory factory($count = null, $state = [])
+ * @method static CategoryFactory factory($count = null, $state = [])
  * @method static QueryBuilder|Category findSimilarSlugs(string $attribute, array $config, string $slug)
  * @method static QueryBuilder|Category fixSubtree($root)
  * @method static QueryBuilder|Category fixTree($root = null)
@@ -104,11 +104,9 @@ use Kalnoy\Nestedset\QueryBuilder;
  * @method static QueryBuilder|Category whereUpdatedAt($value)
  * @method static QueryBuilder|Category withDepth(string $as = 'depth')
  * @method static Builder|Category withTrashed()
- * @method static QueryBuilder|Category withUniqueSlugConstraints(\Illuminate\Database\Eloquent\Model $model, string $attribute, array $config, string $slug)
+ * @method static QueryBuilder|Category withUniqueSlugConstraints(Model $model, string $attribute, array $config, string $slug)
  * @method static QueryBuilder|Category withoutRoot()
  * @method static Builder|Category withoutTrashed()
- * @method static Collection<int, static> all($columns = ['*'])
- * @method static Collection<int, static> get($columns = ['*'])
  * @mixin Eloquent
  */
 class Category extends Model
@@ -116,10 +114,6 @@ class Category extends Model
     use EloquentGetTableNameTrait;
     use SoftDeletes;
     use HasFactory;
-    //use Sluggable;
-    //use HasRecursiveRelationships;
-    //use NodeTrait;
-
     use Sluggable, NodeTrait {
         NodeTrait::replicate as replicateNode;
         Sluggable::replicate as replicateSlug;
@@ -133,6 +127,10 @@ class Category extends Model
         'created_at'  => 'datetime:d.m.Y H:i:s',
     ];
 
+    /**
+     * @param array|null $except
+     * @return Model|Category
+     */
     public function replicate(array $except = null): Model|Category
     {
         $instance = $this->replicateNode($except);
@@ -142,7 +140,7 @@ class Category extends Model
     }
 
     /**
-     * @return \string[][]
+     * @return array
      */
     public function sluggable(): array
     {
@@ -160,34 +158,36 @@ class Category extends Model
         return $this->hasMany(Item::class);
     }
 
-    // Заказы, принадлежащие данной категории
+    /**
+     * @return HasManyThrough
+     */
     public function orderItems(): HasManyThrough
     {
         return $this->hasManyThrough(OrderItem::class, Item::class);
     }
 
+    /**
+     * @return HasOne
+     */
     public function latestContact(): HasOne
     {
         return $this->hasOne(Item::class, 'category_id', 'id')->latestOfMany();
     }
 
+    /**
+     * @return HasOne
+     */
     public function oldestContact(): HasOne
     {
         return $this->hasOne(Item::class, 'category_id', 'id')->oldestOfMany();
     }
 
+    /**
+     * @return HasOne
+     */
     public function mostPrice(): HasOne
     {
         return $this->hasOne(Item::class, 'category_id', 'id')->ofMany('price', 'max');
-    }
-
-    public function mostPriceArticleNumber(): HasOne
-    {
-        return $this->hasOne(Item::class, 'category_id', 'id')->ofMany([
-            'price' => 'max'
-        ], function ($query) {
-            $query->whereArticleNumber('22363');
-        });
     }
 
     /**
@@ -205,15 +205,4 @@ class Category extends Model
     {
         return $this->hasMany(self::class, 'parent_id');
     }
-
-    //public function recursiveItems(): \Staudenmeir\LaravelAdjacencyList\Eloquent\Relations\HasManyOfDescendants
-    //{
-    //    //return $this->hasManyOfDescendantsAndSelf(Item::class);
-    //    return $this->hasManyOfDescendants(Item::class);
-    //}
-
-    //public function recursiveItemsNotSelf(): \Staudenmeir\LaravelAdjacencyList\Eloquent\Relations\HasManyOfDescendants
-    //{
-    //    return $this->hasManyOfDescendants(Item::class);
-    //}
 }

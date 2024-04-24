@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
-
 /**
  * App\Models\Admin\Cart\Order\Contact
  *
@@ -51,11 +50,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Order whereUpdatedAt($value)
  * @method static Builder|Order withTrashed()
  * @method static Builder|Order withoutTrashed()
- * @property-read Collection<int, \App\Models\Admin\Cart\Order\OrderItem> $orderItems
+ * @property-read Collection<int, OrderItem> $orderItems
  * @property-read int|null $order_items_count
- * @property-read Collection<int, \App\Models\Admin\Cart\Order\OrderItem> $orderItems
- * @property-read Collection<int, \App\Models\Admin\Cart\Order\OrderItem> $orderItems
- * @property-read Collection<int, \App\Models\Admin\Cart\Order\OrderItem> $orderItems
  * @mixin Eloquent
  */
 class Order extends Model
@@ -75,6 +71,9 @@ class Order extends Model
         return $this->hasMany(OrderItem::class, 'order_id', 'id');
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function token(): BelongsTo
     {
         return $this->belongsTo(Token::class, 'token_id', 'id');

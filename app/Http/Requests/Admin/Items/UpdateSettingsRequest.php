@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin\Items;
 
+use App\Models\Admin\Item\Item;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateSettingsRequest extends FormRequest
@@ -11,7 +12,7 @@ class UpdateSettingsRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -21,11 +22,26 @@ class UpdateSettingsRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'price_increase' => 'required|integer|min:0|max:1000',
-            //'price_increase2' => 'required|integer|min:-100|max:100',
+            'price_regulation' => [
+                'required',
+                'integer',
+                'min:-1000',
+                'max:1000',
+                function ($attribute, $value, $fail) {
+                    $priceIncrease = (int)$value;
+                    Item::all()->each(function ($item) use ($priceIncrease, $fail) {
+                        $originalPrice = $item->getRawOriginal('price');
+                        $newPrice = ($originalPrice / 100) * $priceIncrease + $originalPrice;
+                        if ($newPrice <= 0) {
+                            $fail('Ошибка: некоторые товары могут отобразиться с отрицательной ценой.');
+                        }
+                    });
+                }
+            ],
             'min_order_cost' => 'nullable|numeric|min:1|max:1000000',
             'phone_number' => 'nullable|max:255',
             'instagram' => 'nullable|max:255',

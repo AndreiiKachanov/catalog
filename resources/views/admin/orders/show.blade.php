@@ -49,10 +49,6 @@
             height: auto;
         }
 
-        /*.img-fluid {*/
-        /*    max-width: 100%;*/
-        /*    height: auto;*/
-        /*}*/
         img {
             vertical-align: middle;
             border-style: none;
@@ -131,10 +127,6 @@
             }
 
             table.bottom td::before {
-                /*
-                * aria-label has no advantage, it won't be read inside a table
-                content: attr(aria-label);
-                */
                 content: attr(data-label);
                 float: left;
                 font-weight: bold;
@@ -209,65 +201,62 @@
             </tr>
             </thead>
             <tbody>
-            {{--        @dump($order->orderItems)--}}
-
-            @foreach ($order->orderItems as $orderItem)
-                <tr>
-    {{--                        @dd($orderItem->item->deleted_at);--}}
-                    <td data-label="Фото">
-                        @isset($orderItem->item->deleted_at)
-                            <img
-                                src="{{ Storage::disk('uploads')->url($orderItem->item->img) }}"
-                                class="img-thumbnail"
-                                alt="{{ $orderItem->item->title }}"
-                            >
-                        @else
-                            <a href="{{ route('admin.items.show', $orderItem->item) }}">
+                @foreach ($order->orderItems as $orderItem)
+                    <tr>
+                        <td data-label="Фото">
+                            @isset($orderItem->item->deleted_at)
                                 <img
                                     src="{{ Storage::disk('uploads')->url($orderItem->item->img) }}"
                                     class="img-thumbnail"
                                     alt="{{ $orderItem->item->title }}"
                                 >
-                            </a>
-                        @endisset
-                    </td>
-                    <td data-label="Название">
-                        @if($orderItem->item->deleted_at)
-                            <p style="color: red;">{{ $orderItem->item->title }} (удален {{ $orderItem->item->deleted_at->format('d.m.Y') }})</p>
-                        @else
-                            <a href="{{ route('admin.items.show', $orderItem->item) }}">{{ $orderItem->item->title }}</a>
-                        @endif
-                    </td>
-                    <td data-label="Артикул">
-                        {{ $orderItem->item->article_number }}
-                    </td>
-                    <td data-label="Цена">
-                        {{ $orderItem->item->price }} ₽
-                    </td>
-                    <td data-label="Кол-во">
-                        {{ $orderItem->cnt }}
-                    </td>
-                    <td data-label="Сумма">{{ number_format($orderItem->item->price * $orderItem->cnt, 0, ',', ' ') }} ₽</td>
-{{--                    <td data-label="Категория">{{ $orderItem->item->category->title ?? '' }}</td>--}}
-                    <td data-label="Категория">
-                        @if($orderItem->item->category->deleted_at)
-                            <span style="color: red;">{{ $orderItem->item->category->title }} (удалена {{ $orderItem->item->category->deleted_at->format('d.m.Y') }})</span>
-                        @else
-                            <a href="{{ route('admin.categories.show', $orderItem->item->category) }}">
-                                {{ $orderItem->item->category->title }}
-                            </a>
-                        @endif
+                            @else
+                                <a href="{{ route('admin.items.show', $orderItem->item) }}">
+                                    <img
+                                        src="{{ Storage::disk('uploads')->url($orderItem->item->img) }}"
+                                        class="img-thumbnail"
+                                        alt="{{ $orderItem->item->title }}"
+                                    >
+                                </a>
+                            @endisset
+                        </td>
+                        <td data-label="Название">
+                            @if($orderItem->item->deleted_at)
+                                <p style="color: red;">{{ $orderItem->item->title }} (удален {{ $orderItem->item->deleted_at->format('d.m.Y') }})</p>
+                            @else
+                                <a href="{{ route('admin.items.show', $orderItem->item) }}">{{ $orderItem->item->title }}</a>
+                            @endif
+                        </td>
+                        <td data-label="Артикул">
+                            {{ $orderItem->item->article_number }}
+                        </td>
+                        <td data-label="Цена">
+                            {{ $orderItem->item->price }} ₽
+                        </td>
+                        <td data-label="Кол-во">
+                            {{ $orderItem->cnt }}
+                        </td>
+                        <td data-label="Сумма">{{ number_format($orderItem->item->price * $orderItem->cnt, 0, ',', ' ') }} ₽</td>
+    {{--                    <td data-label="Категория">{{ $orderItem->item->category->title ?? '' }}</td>--}}
+                        <td data-label="Категория">
+                            @if($orderItem->item->category->deleted_at)
+                                <span style="color: red;">{{ $orderItem->item->category->title }} (удалена {{ $orderItem->item->category->deleted_at->format('d.m.Y') }})</span>
+                            @else
+                                <a href="{{ route('admin.categories.show', $orderItem->item->category) }}">
+                                    {{ $orderItem->item->category->title }}
+                                </a>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+                <tr class="all_sum">
+                    <td style="text-align: left"><strong>Всего:</strong></td>
+                    <td style="text-align: right;" colspan="6">
+                        <strong>
+                            {{ number_format($order->orderItems->sum(fn($item) => $item->item->price * $item->cnt), 0, ',', ' ') }} ₽
+                        </strong>
                     </td>
                 </tr>
-            @endforeach
-            <tr class="all_sum">
-                <td style="text-align: left"><strong>Всего:</strong></td>
-                <td style="text-align: right;" colspan="6">
-                    <strong>
-                        {{ number_format($order->orderItems->sum(fn($item) => $item->item->price * $item->cnt), 0, ',', ' ') }} ₽
-                    </strong>
-                </td>
-            </tr>
             </tbody>
         </table>
     @else

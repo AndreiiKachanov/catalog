@@ -8,8 +8,8 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddsForeignKeyCategoryIdForItemsTable extends Migration
 {
-    private $itemsTableName;
-    private $itemCategoriesTableName;
+    private string $itemsTableName;
+    private string $itemCategoriesTableName;
 
     public function __construct()
     {
@@ -22,7 +22,7 @@ class AddsForeignKeyCategoryIdForItemsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table($this->itemsTableName, function (Blueprint $table) {
             //создаем  индекс для role_id
@@ -42,7 +42,7 @@ class AddsForeignKeyCategoryIdForItemsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table($this->itemsTableName, function (Blueprint $table) {
             if (Schema::hasColumn($this->itemsTableName, 'category_id')) {

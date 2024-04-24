@@ -23,7 +23,6 @@ Breadcrumbs::register('login.phone', function (Crumbs $crumbs) {
     $crumbs->push('Login', route('login.phone'));
 });
 
-
 Breadcrumbs::register('register', function (Crumbs $crumbs) {
     $crumbs->parent('home');
     $crumbs->push('Registration', route('register'));
@@ -41,12 +40,9 @@ Breadcrumbs::register('password.reset', function (Crumbs $crumbs) {
 
 // Admin
 Breadcrumbs::register('admin.home', function (Crumbs $crumbs) {
-    //$crumbs->parent('home');
     $crumbs->push('Админка', route('admin.home'));
 });
 
-//
-//
 // Users
 Breadcrumbs::register('admin.users.index', function (Crumbs $crumbs) {
     $crumbs->parent('admin.home');

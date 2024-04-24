@@ -16,10 +16,6 @@ Route::get('/login/phone', [LoginController::class, 'phone'])->name('login.phone
 Route::post('/login/phone', [LoginController::class, 'verify']);
 Route::get('/verify/{token}', [RegisterController::class, 'verify'])->name('register.verify');
 
-//Route::get('test123', function (\Illuminate\Http\Request $request, \App\UseCases\SendOrderService $service) {
-//    dd($service->getIpAddressInfo($request->ip()));
-//});
-
 Route::view('/', 'layouts.app')->name('home');
 Route::group(
     [
@@ -37,10 +33,10 @@ Route::group(
             Route::post('/', [SettingsController::class, 'update'])->name('update');
         });
 
-        //Товары
         //Проверка наличие товаров в корзине перед удалением
         Route::get('items/check-before-remove/{item}', [ItemsController::class, 'checkBeforeRemove'])
             ->name('items.check-before-remove');
+        //Товары
         Route::resource('items', ItemsController::class);
 
         //Категории
@@ -84,6 +80,5 @@ Route::get('/{any}', fn() => view('layouts.app'))
         'search',
         'category/[0-9a-z\-]*',
         'product/[0-9a-z\-]*',
-        //'admin/categories/[0-9]+/orders'
     ])
     ->name('any');

@@ -6,13 +6,10 @@ use App\Models\Admin\Cart\CartItem;
 use App\Models\Admin\Cart\Invoice;
 use App\Models\Admin\Cart\Order\Order;
 use App\Models\Admin\Cart\Token;
-use App\Models\Admin\Item\Item;
-use App\UseCases\ApiService;
-use App\UseCases\SendOrderService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Admin\Cart\Token>
+ * @extends Factory<Token>
  */
 class TokenFactory extends Factory
 {
@@ -22,7 +19,7 @@ class TokenFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition()
+    public function definition(): array
     {
         $countryCode = $this->faker->countryCode;
         $ipAddress = $this->faker->randomElement([$this->faker->ipv4, $this->faker->ipv6]);
@@ -36,8 +33,8 @@ class TokenFactory extends Factory
                 'flag' => [
                     'img' => 'https://cdn.ipwhois.io/flags/' . mb_strtolower($countryCode) . '.svg',
                 ],
-              'country' => $this->faker->country,
-              'country_code' => $countryCode
+                'country' => $this->faker->country,
+                'country_code' => $countryCode
             ]),
             'browser' => $this->faker->randomElement(['Safari', 'Chrome', 'Firefox', null]),
             'platform' => $this->faker->randomElement(['AndroidOS', 'OS X', 'iOS', 'Windows', null]),
@@ -50,14 +47,13 @@ class TokenFactory extends Factory
         ];
     }
 
-    public function configure()
+    public function configure(): Factory|TokenFactory
     {
         return $this->afterCreating(function (Token $token) {
             Invoice::factory()
                 ->count(1)
                 ->create(['token_id' => $token->id]);
 
-            //if ($this->faker->boolean(30)) { // 30% вероятность создания CartItem
             if ($this->faker->boolean(30)) {
                 $randomCount = random_int(1, 30);
                 CartItem::factory()

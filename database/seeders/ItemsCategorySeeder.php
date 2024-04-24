@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FilesystemException;
 
 class ItemsCategorySeeder extends Seeder
 {
@@ -15,8 +16,10 @@ class ItemsCategorySeeder extends Seeder
      * Run the database seeds.
      *
      * @return void
+     * @throws Exception
+     * @throws FilesystemException
      */
-    public function run()
+    public function run(): void
     {
         if (Category::count() != 0) {
             throw new Exception(Category::getTableName() . ' table is not empty. Stop all seeds!!!');
@@ -39,7 +42,6 @@ class ItemsCategorySeeder extends Seeder
             $categories =  json_decode($file, true);
             $data = [];
             foreach ($categories as $category) {
-                //$category = $category->getAttributes();
                 $arr['id'] = $category['id'];
                 $arr['title'] =  $category['title'];
                 $arr['img'] = $category['img'];

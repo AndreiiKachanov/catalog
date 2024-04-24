@@ -6,10 +6,11 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User\User;
 use App\Http\Controllers\Controller;
 use App\UseCases\Auth\RegisterService;
+use DomainException;
 
 class RegisterController extends Controller
 {
-    private $service;
+    private RegisterService $service;
 
     public function __construct(RegisterService $service)
     {
@@ -41,7 +42,7 @@ class RegisterController extends Controller
         try {
             $this->service->verify($user->id);
             return redirect()->route('login')->with('success', 'Your e-mail is verified. You can now login.');
-        } catch (\DomainException $e) {
+        } catch (DomainException $e) {
             return redirect()->route('login')->with('error', $e->getMessage());
         }
     }

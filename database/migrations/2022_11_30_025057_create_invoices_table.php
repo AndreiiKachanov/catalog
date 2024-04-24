@@ -7,7 +7,7 @@ use App\Models\Admin\Cart\Invoice;
 
 return new class extends Migration
 {
-    private $tableName;
+    private string $tableName;
 
     public function __construct()
     {
@@ -18,7 +18,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         if (!Schema::hasTable($this->tableName)) {
             Schema::create($this->tableName, function (Blueprint $table) {
@@ -35,7 +35,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists($this->tableName);
     }

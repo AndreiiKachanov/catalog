@@ -8,7 +8,6 @@ use App\Http\Requests\Admin\Items\CreateItemRequest;
 use App\Models\Admin\Item\Item;
 use App\Services\ImageService;
 use App\Http\Controllers\Controller;
-use App\Services\SettingsService;
 use App\UseCases\Categories\CategoryService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -35,7 +34,7 @@ class ItemsController extends Controller
         // Если зашли после redirect, т.е. после неудачной валидации
         if (session('redirected_after_fail')) {
             $items = new LengthAwarePaginator([], 0, config('app.pagination_default_value'));
-            return view('admin.items.index', compact('items','searchInput', 'radioButton'));
+            return view('admin.items.index', compact('items', 'searchInput', 'radioButton'));
         }
 
         $query = Item::orderByDesc('created_at');
@@ -68,9 +67,8 @@ class ItemsController extends Controller
                 'cartItems as not_ordered_count' => fn(/**@var CartItem $query*/ $query) => $query->doesntHave('orderItem'),
             ])
             ->paginate(config('app.pagination_default_value'));
-        $priceIncrease = SettingsService::getPriceIncrease();
-        //$priceIncrease2 = SettingsService::getPriceIncrease2();
-        return view('admin.items.index', compact('items','searchInput', 'radioButton', 'priceIncrease'));
+
+        return view('admin.items.index', compact('items', 'searchInput', 'radioButton'));
     }
 
     /**
@@ -108,7 +106,7 @@ class ItemsController extends Controller
 
             $item->update(['article_number' => $item->id . '.' . $item->article_number]);
             return redirect()->route('admin.items.show', $item);
-    } catch (Exception $exception) {
+        } catch (Exception $exception) {
             writeErrorToFile($exception->getMessage());
             return redirect()
             ->back()
@@ -123,8 +121,11 @@ class ItemsController extends Controller
      */
     public function show(Item $item)
     {
-        $item->load(['category' => fn(/**@var Category $query*/ $query) => $query->withTrashed()])
-            ->loadCount(['cartItems as not_ordered_count' => fn(/**@var CartItem $query*/ $query) => $query->doesntHave('orderItem')]);
+        $item->load(['category' => fn(/**@var Category $query */ $query) => $query->withTrashed()])
+            ->loadCount([
+                'cartItems as not_ordered_count' => fn(/**@var CartItem $query */ $query
+                ) => $query->doesntHave('orderItem')
+            ]);
         return view('admin.items.show', compact('item'));
     }
 
@@ -167,7 +168,6 @@ class ItemsController extends Controller
                 ->withInput()
                 ->withErrors('Ошибка обновления товара. См. лог.');
         }
-
     }
 
     /**

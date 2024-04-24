@@ -3,12 +3,11 @@
 namespace Database\Factories\Admin\Cart;
 
 use App\Models\Admin\Cart\CartItem;
-use App\Models\Admin\Cart\Order\Order;
 use App\Models\Admin\Item\Item;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Admin\Cart\CartItem>
+ * @extends Factory<CartItem>
  */
 class CartItemFactory extends Factory
 {
@@ -26,14 +25,4 @@ class CartItemFactory extends Factory
             'item_id' => Item::inRandomOrder()->first()->id,
         ];
     }
-    //public function configure()
-    //{
-        //return $this->afterCreating(function (CartItem $cartItem) {
-            // Создаем и связываем с CartItem экземпляр Item с использованием фабрики ItemFactory
-            //$item = Item::factory()->create();
-            //$cartItem->item()->associate($item)->save();
-
-            //$order = Order::factory()->create();
-        //});
-    //}
 }

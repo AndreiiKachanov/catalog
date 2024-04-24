@@ -1,9 +1,6 @@
 @php
     /** @var \App\Models\Admin\Item\Item $item */
     /** @var \Illuminate\Pagination\LengthAwarePaginator $items */
-
-    $th = 'Наценка + ' . $priceIncrease . ' %';
-    //$th2 = "Регулировка $priceIncrease2 %";
 @endphp
 
 @extends('layouts.app')
@@ -214,8 +211,7 @@
                 <th scope="col">Примечание</th>
                 <th scope="col">Артикул</th>
                 <th scope="col">Цена закупки</th>
-                <th scope="col">{{ $th }}</th>
-{{--                <th scope="col">{{ $th2 }}</th>--}}
+                <th scope="col">{!! formatPrice(\App\Services\SettingsService::getPriceIncrease(), 'Наценка'); !!}</th>
                 <th scope="col">Мин. заказ</th>
                 <th scope="col">Новый</th>
                 <th scope="col">Хит</th>
@@ -239,11 +235,6 @@
                                 alt="{{ $item->title }}"
                                 title="{{ is_null($item->img) ? 'no-image' : $item->title }}"
                             >
-{{--                            <img--}}
-{{--                                src="{{ Storage::disk('uploads')->url($item->img) }}"--}}
-{{--                                class="img-thumbnail"--}}
-{{--                                alt="{{ $item->title }}"--}}
-{{--                            >--}}
                         </a>
                     </td>
                     <td data-label="Название">
@@ -258,15 +249,9 @@
                     <td data-label="Цена закупки">
                         {{ $item->getRawOriginal('price') }} ₽
                     </td>
-{{--                    <td data-label="Цена закупки">--}}
-{{--                        {{ round(($item->getRawOriginal('price') / 100) * $priceIncrease + $item->getRawOriginal('price')) }} ₽--}}
-{{--                    </td>--}}
-                    <td data-label="{{ $th }}">
-                        {{ round(($item->getRawOriginal('price') / 100) * $priceIncrease + $item->getRawOriginal('price')) }} ₽
+                    <td data-label="{{ formatPriceToDataAttribute(\App\Services\SettingsService::getPriceIncrease(), 'Наценка') }}">
+                        {{ $item->price }} ₽
                     </td>
-{{--                    <td data-label="{{ $th2 }}">--}}
-{{--                        {{ $item->price }} ₽--}}
-{{--                    </td>--}}
                     <td data-label="Мин. заказ">
                         {!! $item->min_order_amount  ?? '&nbsp;' !!}
                     </td>
