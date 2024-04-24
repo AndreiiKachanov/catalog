@@ -27,7 +27,7 @@
                                 {{ Form::label($propKey, $labelTitleWithStarSymbol, ['class' => 'col-form-label']) }}
 
                                 @php
-                                    $numberInputTypes = ['price_increase','min_order_cost'];
+                                    $numberInputTypes = ['price_increase', 'price_regulation', 'min_order_cost'];
                                     $textAreaType = ['custom_text'];
                                     $fieldType = in_array($propKey, $numberInputTypes)
                                     ? 'number'

@@ -83,8 +83,16 @@ class Token extends Model
     public function getIpInfoAttribute($value): mixed
     {
         if ($value !== null) {
+            $value = preg_replace_callback(
+                '!s:\d+:"(.*?)";!s',
+                function ($m) {
+                    return "s:" . strlen($m[1]) . ':"' . $m[1] . '";';
+                },
+                $value
+            );
             return unserialize($value);
         }
+        return null;
     }
 
     /**
